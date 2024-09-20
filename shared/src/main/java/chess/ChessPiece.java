@@ -51,7 +51,7 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        return pieceColor;
     }
 
     /**
@@ -77,14 +77,35 @@ public class ChessPiece {
 //            int check =
             while (col < 8){ /** posisble moves to the right */
                 col += 1;
+                if (board.getPiece(new ChessPosition(row, col)) != null){
+                    if (board.getPiece(new ChessPosition(row, col)).getTeamColor() == this.getTeamColor()){
+                        break;
+                    }else{
+                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, col), null));
+                        break;
+                    }
+                }
                 moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, col), null));
-
+                System.out.print("{" + row + ", " + col + "}, ");
             }
+            System.out.print("\b\b\n");
+
             col = myPosition.getColumn();
             while (col > 1){ /** posisble moves to the left */
                 col -= 1;
+                if (board.getPiece(new ChessPosition(row, col)) != null){
+                    if (board.getPiece(new ChessPosition(row, col)).getTeamColor() == this.getTeamColor()){
+                        break;
+                    }else{
+                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, col), null));
+                        break;
+                    }
+                }
                 moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, col), null));
+                System.out.print("{" + row + ", " + col + "}, ");
             }
+            System.out.print("\b\b\n");
+
             col = myPosition.getColumn();
             while (row > 1){ /** posisble moves to the down */
                 row -= 1;
@@ -92,16 +113,40 @@ public class ChessPiece {
                     break;
                 }
                 moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, col), null));
-                ChessBoard man = board;
+                System.out.print("{" + row + ", " + col + "}, ");
+            }
+            System.out.print("\b\b\n");
 
-            }
             row = myPosition.getRow();
-            while (row < 8){ /** posisble moves to the left */
+            while (row < 8){ /** possible moves to the up */
                 row += 1;
+                if (board.getPiece(new ChessPosition(row, col)) != null){
+                    if (board.getPiece(new ChessPosition(row, col)).getTeamColor() == this.getTeamColor()){
+                        break;
+                    }else{
+                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, col), null));
+                        break;
+                    }
+                }
                 moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row, col), null));
+                System.out.print("{" + row + ", " + col + "}, ");
             }
+
+            System.out.print("\b\b\n");
         }
 
         return moves;
     }
+
+    private boolean blocked(ChessBoard board, int row, int col, ChessPiece piece) {
+        if (board.getPiece(new ChessPosition(row, col)) == null){
+            return true;
+        }else {
+            if (piece.getPieceType() == board.getPiece(new ChessPosition(row, col)).getPieceType()){
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
