@@ -13,12 +13,22 @@ public class ChessPosition {
     private final int row;
     private final int col;
 
+//    @Override
+//    public String toString() {
+//        return
+////                "ChessPosition{" +
+////                "row=" + row +
+////                ", col=" + col +
+////                '}';
+//        "{" + row + ", " + col + "}";
+//    }
+
     @Override
     public String toString() {
         return "ChessPosition{" +
-                "row=" + row +
-                ", col=" + col +
-                '}';
+               "row=" + row +
+               ", col=" + col +
+               '}';
     }
 
     public ChessPosition(int row, int col) {

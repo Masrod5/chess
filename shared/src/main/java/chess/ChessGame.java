@@ -30,6 +30,11 @@ public class ChessGame {
         throw new RuntimeException("Not implemented");
     }
 
+    @Override
+    public String toString() {
+        return "ChessGame{}";
+    }
+
     /**
      * Enum identifying the 2 possible teams in a chess game
      */
