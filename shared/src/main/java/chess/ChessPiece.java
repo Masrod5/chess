@@ -30,19 +30,6 @@ public class ChessPiece {
         this.type = type;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChessPiece that = (ChessPiece) o;
-        return pieceColor == that.pieceColor && type == that.type;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pieceColor, type);
-    }
-
     /**
      * The various different chess piece options
      */
@@ -76,6 +63,19 @@ public class ChessPiece {
         return this.type;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -98,14 +98,17 @@ public class ChessPiece {
                 if (row == 2 && board.getPiece(new ChessPosition(row+2, col))==null && board.getPiece(new ChessPosition(row+2, col))==null) {
                     moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row+2, col), null));
                 }
-
-                ChessPiece guy = board.getPiece(new ChessPosition(row+1, col-1));
-                if (guy != null && guy.getTeamColor() != this.getTeamColor()){
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row+1, col-1), null));
+                if (col > 1) {
+                    ChessPiece guy = board.getPiece(new ChessPosition(row + 1, col - 1));
+                    if (guy != null && guy.getTeamColor() != this.getTeamColor()) {
+                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row + 1, col - 1), null));
+                    }
                 }
-                guy = board.getPiece(new ChessPosition(row+1, col+1));
-                if (guy != null && guy.getTeamColor() != this.getTeamColor()){
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row+1, col+1), null));
+                if (col < 8) {
+                    ChessPiece guy = board.getPiece(new ChessPosition(row + 1, col + 1));
+                    if (guy != null && guy.getTeamColor() != this.getTeamColor()) {
+                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row + 1, col + 1), null));
+                    }
                 }
             }
 
@@ -119,13 +122,17 @@ public class ChessPiece {
                     moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row-2, col), null));
                 }
 
-                ChessPiece guy = board.getPiece(new ChessPosition(row-1, col-1));
-                if (col > 1 && guy != null && guy.getTeamColor() != this.getTeamColor()){ /** capture down left */
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row-1, col-1), null));
+                if (col > 1) {
+                    ChessPiece guy = board.getPiece(new ChessPosition(row - 1, col - 1));
+                    if (col > 1 && guy != null && guy.getTeamColor() != this.getTeamColor()) { /** capture down left */
+                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row - 1, col - 1), null));
+                    }
                 }
-                guy = board.getPiece(new ChessPosition(row-1, col+1));
-                if (col < 8 && guy != null && guy.getTeamColor() != this.getTeamColor()){ /** capture down right */
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row-1, col+1), null));
+                if (col > 8) {
+                    ChessPiece guy = board.getPiece(new ChessPosition(row - 1, col + 1));
+                    if (col < 8 && guy != null && guy.getTeamColor() != this.getTeamColor()) { /** capture down right */
+                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(row - 1, col + 1), null));
+                    }
                 }
             }
 
