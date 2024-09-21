@@ -466,5 +466,9 @@ public class ChessPiece {
         return false;
     }
 
+    private boolean checkinging() {
+        return true;
+    }
+
 
 }
