@@ -10,18 +10,12 @@ import java.util.Objects;
  */
 public class ChessPosition {
 
-    private final int row;
-    private final int col;
-
-//    @Override
-//    public String toString() {
-//        return
-////                "ChessPosition{" +
-////                "row=" + row +
-////                ", col=" + col +
-////                '}';
-//        "{" + row + ", " + col + "}";
-//    }
+    @Override
+    public String toString() {
+        return "{" + row +
+                ", " + col +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -36,13 +30,8 @@ public class ChessPosition {
         return Objects.hash(row, col);
     }
 
-    @Override
-    public String toString() {
-        return "ChessPosition{" +
-               "row=" + row +
-               ", col=" + col +
-               '}';
-    }
+    private int row;
+    private int col;
 
     public ChessPosition(int row, int col) {
         this.row = row;
@@ -64,5 +53,4 @@ public class ChessPosition {
     public int getColumn() {
         return col;
     }
-
 }

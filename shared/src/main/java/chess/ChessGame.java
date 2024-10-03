@@ -27,12 +27,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
-    }
-
-    @Override
-    public String toString() {
-        return "ChessGame{}";
+        team = TeamColor.WHITE;
     }
 
     /**
