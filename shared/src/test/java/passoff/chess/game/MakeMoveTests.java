@@ -344,13 +344,13 @@ public class MakeMoveTests {
         var game = new ChessGame();
         game.setBoard(loadBoard("""
                 | | | | | | | | |
-                | | |P| | | | | |
+                | | |P| | | | |k|
                 | | | | | | | | |
                 | | | | | | | | |
                 | | | | | | | | |
                 | | | | | | | | |
                 | | | | |p| | | |
-                | | | | | |Q| | |
+                | | | | | |Q| |K|
                 """));
         game.setTeamTurn(ChessGame.TeamColor.WHITE);
 
@@ -361,12 +361,15 @@ public class MakeMoveTests {
         Assertions.assertNull(game.getBoard().getPiece(whitePromotion.getStartPosition()),
                 "After move, a piece is still present in the start position");
         ChessPiece whiteEndPiece = game.getBoard().getPiece(whitePromotion.getEndPosition());
-        Assertions.assertNotNull(whiteEndPiece, "After move, no piece found at the end position");
+        Assertions.assertNotNull(whiteEndPiece,
+                "After move, no piece found at the end position");
         Assertions.assertEquals(promotionType, whiteEndPiece.getPieceType(),
                 "Found piece at end position is not the correct piece type");
         Assertions.assertEquals(ChessGame.TeamColor.WHITE, whiteEndPiece.getTeamColor(),
                 "Found piece at end position is the wrong team color");
 
+
+        game.setTeamTurn(ChessGame.TeamColor.BLACK);
 
         //Black take + promotion
         ChessMove blackPromotion = new ChessMove(new ChessPosition(2, 5), new ChessPosition(1, 6), promotionType);

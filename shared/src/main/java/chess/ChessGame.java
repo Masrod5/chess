@@ -108,27 +108,30 @@ public class ChessGame {
 
 
         Collection<ChessMove> valid = validMoves(startPosition);
-        if (valid.contains(move) && piece.getTeamColor() == whoseTurn){
+        if (valid.contains(move) && piece.getTeamColor() == getTeamTurn()){
             board.addPiece(startPosition, null);
 
-            if (board.getPiece(startPosition).getPieceType() == ChessPiece.PieceType.PAWN && startPosition.getRow() == 7){
-                if (move.getPromotionPiece() == ChessPiece.PieceType.ROOK){
-                    board.addPiece(endPosition, new ChessPiece(whoseTurn, ChessPiece.PieceType.ROOK));
-                }else
-                if (move.getPromotionPiece() == ChessPiece.PieceType.KNIGHT){
-                    board.addPiece(endPosition, new ChessPiece(whoseTurn, ChessPiece.PieceType.KNIGHT));
-                }else
-                if (move.getPromotionPiece() == ChessPiece.PieceType.BISHOP){
-                    board.addPiece(endPosition, new ChessPiece(whoseTurn, ChessPiece.PieceType.BISHOP));
-                }else
-                if (move.getPromotionPiece() == ChessPiece.PieceType.QUEEN){
+
+
+            if (currPiece == ChessPiece.PieceType.PAWN && (endPosition.getRow() == 8 || endPosition.getRow() == 1)) {
+                if (move.getPromotionPiece() == ChessPiece.PieceType.QUEEN) {
                     board.addPiece(endPosition, new ChessPiece(whoseTurn, ChessPiece.PieceType.QUEEN));
                 }
-
-
-            }else {
+                if (move.getPromotionPiece() == ChessPiece.PieceType.ROOK) {
+                    board.addPiece(endPosition, new ChessPiece(whoseTurn, ChessPiece.PieceType.ROOK));
+                }
+                if (move.getPromotionPiece() == ChessPiece.PieceType.KNIGHT) {
+                    board.addPiece(endPosition, new ChessPiece(whoseTurn, ChessPiece.PieceType.KNIGHT));
+                }
+                if (move.getPromotionPiece() == ChessPiece.PieceType.BISHOP) {
+                    board.addPiece(endPosition, new ChessPiece(whoseTurn, ChessPiece.PieceType.BISHOP));
+                }
+            }else{
                 board.addPiece(endPosition, new ChessPiece(whoseTurn, currPiece));
+
             }
+
+
         }else{
             throw new InvalidMoveException();
         }
