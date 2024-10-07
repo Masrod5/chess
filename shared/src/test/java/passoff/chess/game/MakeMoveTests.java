@@ -369,8 +369,6 @@ public class MakeMoveTests {
                 "Found piece at end position is the wrong team color");
 
 
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
-
         //Black take + promotion
         ChessMove blackPromotion = new ChessMove(new ChessPosition(2, 5), new ChessPosition(1, 6), promotionType);
         game.makeMove(blackPromotion);
