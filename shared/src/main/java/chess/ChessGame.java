@@ -91,6 +91,7 @@ public class ChessGame {
          * then the end position becomes null because it just moved off of it
          * then add a new piece that is the same type at the end position*/
 
+        /** must enter a start position for the move */
         if (board.getPiece(move.getStartPosition()) == null){
             throw new InvalidMoveException();
         }
