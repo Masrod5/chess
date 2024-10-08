@@ -98,10 +98,10 @@ public class ChessGame {
 
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
-        ChessPiece.PieceType promoPiece = move.getPromotionPiece();
         ChessPiece.PieceType currPiece = board.getPiece(startPosition).getPieceType();
         ChessPiece piece = new ChessPiece(board.getPiece(startPosition).getTeamColor(), board.getPiece(startPosition).getPieceType());
 
+        /** if there is no piece at the start position then throw an exception */
         if (board.getPiece(startPosition)== null){
             throw new InvalidMoveException();
         }
@@ -109,10 +109,10 @@ public class ChessGame {
 
         Collection<ChessMove> valid = validMoves(startPosition);
         if (valid.contains(move) && piece.getTeamColor() == getTeamTurn()){
-            board.addPiece(startPosition, null);
+            board.addPiece(startPosition, null);  /** sets the piece that is moved off of to null. it is now empty. */
 
 
-
+            /** if it is a pawn that is being promoted, figure out which piece to promote too. */
             if (currPiece == ChessPiece.PieceType.PAWN && (endPosition.getRow() == 8 || endPosition.getRow() == 1)) {
                 if (move.getPromotionPiece() == ChessPiece.PieceType.QUEEN) {
                     board.addPiece(endPosition, new ChessPiece(whoseTurn, ChessPiece.PieceType.QUEEN));
@@ -126,24 +126,21 @@ public class ChessGame {
                 if (move.getPromotionPiece() == ChessPiece.PieceType.BISHOP) {
                     board.addPiece(endPosition, new ChessPiece(whoseTurn, ChessPiece.PieceType.BISHOP));
                 }
-            }else{
+            }else{ /** otherwise just move the piece like normal */
                 board.addPiece(endPosition, new ChessPiece(whoseTurn, currPiece));
 
             }
-
 
         }else{
             throw new InvalidMoveException();
         }
 
+        /** after each move change switch team turn */
         if (this.getTeamTurn() == TeamColor.WHITE){
             setTeamTurn(TeamColor.BLACK);
         }else{
             setTeamTurn(TeamColor.WHITE);
         }
-//        setTeamTurn();
-
-
     }
 
     /**
