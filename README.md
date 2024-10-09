@@ -123,12 +123,38 @@ end
 
 group #purple Create Game #white
 Client -> Server: [POST] /game\nauthToken\n{gameName}
+Server->Handler:{ "gameName":"" }
+Handler->Service:create game request
+Service->DataAccess:get user info by auth token
+Service<-DataAccess:user data
+Service->DataAccess:create new game
+DataAccess->db:add new game
+Handler<-Service:create game result
+Server<-Handler:{ "gameID": 1234 }
+Client<-Server:200 \n{ "gameID": 1234 }
 end
 
 group #yellow Join Game #black
 Client -> Server: [PUT] /game\nauthToken\n{playerColor, gameID}
+Server->Handler:{ "playerColor":"WHITE/BLACK", "gameID": 1234 }\n
+Handler->Service:join game request
+Service->DataAccess:get game info by auth token
+DataAccess->db:find game info
+Service<-DataAccess:game data
+Handler<-Service:join game result
+Server<-Handler:{}
+Client<-Server:200\n{}
 end
 
 group #gray Clear application #white
 Client -> Server: [DELETE] /db
+Server->Handler:/db
+Handler->Service:clear database request
+Service->DataAccess:get database
+DataAccess->db:find user, game, login, etc info
+Service<-DataAccess:database info
+Service->DataAccess:clear database
+Handler<-Service:clear result
+Server<-Handler:{}
+Client<-Server:200 \n{}
 end
