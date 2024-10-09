@@ -50,3 +50,85 @@ java -jar client/target/client-jar-with-dependencies.jar
 
 ♕ 240 Chess Client: chess.ChessPiece@7852e922
 ```
+
+
+
+
+
+
+
+actor Client
+participant Server
+participant Handler
+participant Service
+participant DataAccess
+database db
+
+entryspacing 0.9
+group #navy Registration #white
+Client -> Server: [POST] /user\n{"username":" ", "password":" ", "email":" "}
+Server -> Handler: {"username":" ", "password":" ", "email":" "}
+Handler -> Service: register(RegisterRequest)
+Service -> DataAccess: getUser(username)
+DataAccess -> db:Find UserData by username
+DataAccess --> Service: null
+Service -> DataAccess:createUser(userData)
+DataAccess -> db:Add UserData
+Service --> DataAccess:createAuth(authData)
+DataAccess -> db:Add AuthData
+Service --> Handler: RegisterResult
+Handler --> Server: {"username" : " ", "authToken" : " "}
+Server --> Client: 200\n{"username" : " ", "authToken" : " "}
+end
+
+group #orange Login #white
+Client->Server:[POST] /session\n{username, password}
+Server->Handler:{ "username":"", "password":"" }
+Handler->Service:login (login request)
+Service->DataAccess:getUser(username)
+DataAccess->db:Find user data
+Service<-DataAccess:user data
+Service->DataAccess:create new auth token
+DataAccess->db:add auth token
+Handler<-Service:login result
+Server<-Handler:{ "username":"", "authToken":"" }
+Client<-Server:200\n{ "username":"", "authToken":"" }
+end
+
+group #green Logout #white
+Client -> Server: [DELETE] /session\nauthToken
+Server->Handler:{"auth token"}
+Handler->Service:logout request
+Service->DataAccess:get user by auth token
+DataAccess->db:find user data
+Service<-DataAccess:user data
+Service->DataAccess:delete auth token
+DataAccess->db:remove auth token
+Handler<-Service:logout result
+Server<-Handler:{}
+Client<-Server:200 \n{}
+end
+
+group #red List Games #white
+Client -> Server: [GET] /game\nauthToken
+Server->Handler:{auth token}
+Handler->Service:list games request
+Service->DataAccess:get user info by auth token
+DataAccess->db:find user data
+Service<-DataAccess:user data
+Handler<-Service:listGames
+Server<-Handler:{ "games": [{"gameID": 1234, "whiteUsername":"", "blackUsername":"", "gameName:""} ]}
+Client<-Server:200\n{ "games": [{"gameID": 1234, "whiteUsername":"", "blackUsername":"", "gameName:""} ]}
+end
+
+group #purple Create Game #white
+Client -> Server: [POST] /game\nauthToken\n{gameName}
+end
+
+group #yellow Join Game #black
+Client -> Server: [PUT] /game\nauthToken\n{playerColor, gameID}
+end
+
+group #gray Clear application #white
+Client -> Server: [DELETE] /db
+end
