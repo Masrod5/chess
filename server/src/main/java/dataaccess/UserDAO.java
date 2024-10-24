@@ -1,5 +1,15 @@
 package dataaccess;
 
-public interface DataAccess {
-    
+import model.userData;
+
+public interface UserDAO {
+    /**
+    clear: A method for clearing all data from the database. This is used during testing.
+            createUser: Create a new user.
+            getUser: Retrieve a user with the given username.
+     */
+    void clear() throws DataAccessException;
+    void createUser(userData user) throws DataAccessException;
+    userData getUser(String username) throws DataAccessException;
+
 }

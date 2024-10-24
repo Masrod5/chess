@@ -1,4 +1,7 @@
 package model;
+import chess.*;
 
-public class gameData {
+
+public record gameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
+
 }
