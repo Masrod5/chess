@@ -26,13 +26,17 @@ public class UserService {
         UserData info = userDAO.getUser(user.username());
 
         if (info == null){
+            if (user.password().isEmpty() || user.username().isEmpty() || user.email().isEmpty()){
+                throw new DataAccessException("bad request");
+            }
+
             userDAO.createUser(user);
             AuthData newAuth = new AuthData(generateToken(), user.username());
             authDAO.createAuth(newAuth);
             return newAuth;
         }
 
-        throw new DataAccessException("user already exists");
+        throw new DataAccessException("already taken");
 //        return null;
 
     }
@@ -42,6 +46,7 @@ public class UserService {
 
         // get user by username
         UserData info = userDAO.getUser(user.username());
+//        AuthData auth = authDAO.getAuth(user.password());
         // check if the passwords match
         if (info != null && Objects.equals(user.password(), info.password())){
             AuthData newAuth = new AuthData(generateToken(), user.username());
@@ -55,7 +60,7 @@ public class UserService {
             return newAuth;
         }
 
-        return null;
+        throw new DataAccessException("unauthorized");
     }
 
 
@@ -67,6 +72,13 @@ public class UserService {
 
 
 //        String user = auth.authToken();
+        if (auth == null){
+            throw new DataAccessException("unauthorized");
+        }
+        if (authDAO.getAuth(auth.authToken()) == null){
+            throw new DataAccessException("unauthorized");
+        }
+
         if (auth != null && authDAO.getAuth(auth.authToken()) != null){
             authDAO.deleteAuth(authDAO.getAuth(auth.authToken()));
         }

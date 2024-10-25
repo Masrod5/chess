@@ -4,6 +4,7 @@ import model.AuthData;
 import model.UserData;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MemoryAuthDAO implements AuthDAO {
     /**
@@ -11,17 +12,23 @@ public class MemoryAuthDAO implements AuthDAO {
      createUser: Create a new user.
      getUser: Retrieve a user with the given username.
      */
-    final private ArrayList<UserData> authTokens = new ArrayList<>();
+    final private ArrayList<AuthData> authTokens = new ArrayList<>();
 
 
     @Override
     public void createAuth(AuthData auth) {
+        authTokens.add(auth);
 
     }
 
     @Override
     public AuthData getAuth(String auth) {
 
+        for (AuthData auths : authTokens){
+            if (Objects.equals(auths.authToken(), auth)){
+                return auths;
+            }
+        }
         return null;
     }
 

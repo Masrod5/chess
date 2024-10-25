@@ -47,9 +47,27 @@ public class Server {
 
 
 
-        if(Objects.equals(exception.getMessage(), "user already exists")){
+        if(Objects.equals(exception.getMessage(), "already taken")){
             res.status(403);
-            request = new FailerResponse("user already exists");
+            request = new FailerResponse("already taken");
+
+            String json = serialize.toJson(request);
+
+            res.body(json);
+            return json;
+        }
+        if(Objects.equals(exception.getMessage(), "bad request")){
+            res.status(400);
+            request = new FailerResponse("bad request");
+
+            String json = serialize.toJson(request);
+
+            res.body(json);
+            return json;
+        }
+        if(Objects.equals(exception.getMessage(), "unauthorized")){
+            res.status(401);
+            request = new FailerResponse("Error: unauthorized");
 
             String json = serialize.toJson(request);
 
@@ -57,7 +75,8 @@ public class Server {
             return json;
         }
 
-        return "{ \"message\": \"Error: bad request\" }";
+
+        return null;
 
 
     }
@@ -68,7 +87,7 @@ public class Server {
 
         new UserService(userDAO, authDAO).logout(request);
 
-        return serialize.toJson(request);
+        return "{}";
     }
 
     private String register(Request req, Response res) throws DataAccessException {
