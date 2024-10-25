@@ -62,13 +62,13 @@ public class UserService {
         return UUID.randomUUID().toString();
     }
 
-    public void logout(AuthData auth) {
+    public void logout(AuthData auth) throws DataAccessException {
 
 
-        String user = auth.authToken();
-
-
-
+//        String user = auth.authToken();
+        if (auth != null && authDAO.getAuth(auth.authToken()) != null){
+            authDAO.deleteAuth(authDAO.getAuth(auth.authToken()));
+        }
     }
 
 }

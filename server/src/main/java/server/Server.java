@@ -27,6 +27,7 @@ public class Server {
 
         Spark.post("/session", this::login);
         Spark.post("/user", this::register);
+        Spark.delete("session", this::logout);
 
 
 
@@ -35,6 +36,15 @@ public class Server {
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private String logout(Request req, Response res) throws DataAccessException {
+        Gson serialize = new Gson();
+        AuthData request = serialize.fromJson(req.body(), AuthData.class);
+
+        new UserService(userDAO, authDAO).logout(request);
+
+        return serialize.toJson(request);
     }
 
     private String register(Request req, Response res) throws DataAccessException {
@@ -53,10 +63,6 @@ public class Server {
         AuthData auth = new UserService(userDAO, authDAO).login(request);
 
         return serialize.toJson(auth);
-    }
-
-    public static String generateToken() {
-        return UUID.randomUUID().toString();
     }
 
     public void stop() {
