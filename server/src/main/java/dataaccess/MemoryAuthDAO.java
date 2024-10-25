@@ -1,7 +1,7 @@
 package dataaccess;
 
 import model.AuthData;
-import model.userData;
+import model.UserData;
 
 import java.util.ArrayList;
 
@@ -11,19 +11,23 @@ public class MemoryAuthDAO implements AuthDAO {
      createUser: Create a new user.
      getUser: Retrieve a user with the given username.
      */
-    final private ArrayList<userData> authTokens = new ArrayList<>();
+    final private ArrayList<UserData> authTokens = new ArrayList<>();
 
-    public AuthData createAuth(AuthData auth) {
-        return auth;
+
+    @Override
+    public void createAuth(AuthData auth) {
+
     }
 
-    public AuthData getAuth(AuthData auth) {
-        return auth;
+    @Override
+    public AuthData getAuth(String auth) {
+
+        return null;
     }
 
-    public AuthData deleteAuth(AuthData auth){
+    public void deleteAuth(AuthData auth){
         authTokens.remove(auth);
-        return auth;
+
     }
 
 }

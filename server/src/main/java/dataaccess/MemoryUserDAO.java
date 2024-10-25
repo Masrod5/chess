@@ -1,11 +1,8 @@
 package dataaccess;
 
-import model.gameData;
-import model.userData;
-import dataaccess.UserDAO;
+import model.UserData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MemoryUserDAO implements UserDAO {
     /**
@@ -13,13 +10,13 @@ public class MemoryUserDAO implements UserDAO {
      createUser: Create a new user.
      getUser: Retrieve a user with the given username.
      */
-    final private ArrayList<userData> users = new ArrayList<>();
+    final private ArrayList<UserData> users = new ArrayList<>();
 
     public void clear() {
         users.clear();
     }
 
-    public void createUser(userData user) {
+    public void createUser(UserData user) {
 //        if (users.contains(user)) {
 //            throw DataAccessException;
 //        }
@@ -27,8 +24,8 @@ public class MemoryUserDAO implements UserDAO {
 //        return user;
     }
 
-    public userData getUser(String user){
-        for (userData users : users) {
+    public UserData getUser(String user){
+        for (UserData users : users) {
             if (users.userName() == user){
                 return users;
             }
