@@ -23,16 +23,17 @@ public class UserService {
 
     public AuthData register(UserData user) throws DataAccessException {
 
-        UserData info = userDAO.getUser(user.userName());
+        UserData info = userDAO.getUser(user.username());
 
         if (info == null){
             userDAO.createUser(user);
-            AuthData newAuth = new AuthData(generateToken(), user.userName());
+            AuthData newAuth = new AuthData(generateToken(), user.username());
             authDAO.createAuth(newAuth);
             return newAuth;
         }
 
-        return null;
+        throw new DataAccessException("user already exists");
+//        return null;
 
     }
 

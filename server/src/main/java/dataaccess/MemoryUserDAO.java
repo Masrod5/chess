@@ -3,6 +3,7 @@ package dataaccess;
 import model.UserData;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MemoryUserDAO implements UserDAO {
     /**
@@ -26,7 +27,7 @@ public class MemoryUserDAO implements UserDAO {
 
     public UserData getUser(String user){
         for (UserData users : users) {
-            if (users.userName() == user){
+            if (Objects.equals(users.username(), user)){
                 return users;
             }
         }
