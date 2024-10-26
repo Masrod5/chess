@@ -83,9 +83,10 @@ public class Server {
 
     private String logout(Request req, Response res) throws DataAccessException {
         Gson serialize = new Gson();
-        AuthData request = serialize.fromJson(req.body(), AuthData.class);
+        String thing = serialize.fromJson(req.headers("authorization"), String.class);
+        String request = serialize.fromJson(req.body(), String.class);
 
-        new UserService(userDAO, authDAO).logout(request);
+        new UserService(userDAO, authDAO).logout(thing);
 
         return "{}";
     }

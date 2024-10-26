@@ -32,7 +32,7 @@ public class UserService {
 
             userDAO.createUser(user);
             AuthData newAuth = new AuthData(generateToken(), user.username());
-            authDAO.createAuth(newAuth);
+//            authDAO.createAuth(newAuth);
             return newAuth;
         }
 
@@ -68,19 +68,19 @@ public class UserService {
         return UUID.randomUUID().toString();
     }
 
-    public void logout(AuthData auth) throws DataAccessException {
+    public void logout(String auth) throws DataAccessException {
 
 
 //        String user = auth.authToken();
         if (auth == null){
             throw new DataAccessException("unauthorized");
         }
-        if (authDAO.getAuth(auth.authToken()) == null){
+        if (authDAO.getAuth(auth) == null){
             throw new DataAccessException("unauthorized");
         }
 
-        if (auth != null && authDAO.getAuth(auth.authToken()) != null){
-            authDAO.deleteAuth(authDAO.getAuth(auth.authToken()));
+        if (auth != null && authDAO.getAuth(auth) != null){
+            authDAO.deleteAuth(authDAO.getAuth(auth));
         }
     }
 
