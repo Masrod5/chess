@@ -32,6 +32,10 @@ public class MemoryAuthDAO implements AuthDAO {
         return null;
     }
 
+    public int getSize(){
+        return authTokens.size();
+    }
+
     public void deleteAuth(AuthData auth){
         authTokens.remove(auth);
 
