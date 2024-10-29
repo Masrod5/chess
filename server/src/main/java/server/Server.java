@@ -7,7 +7,7 @@ import dataaccess.*;
 import com.google.gson.Gson;
 
 import model.*;
-import service.UserService;
+import service.Service;
 import spark.*;
 
 public class Server {
@@ -29,6 +29,8 @@ public class Server {
         Spark.post("/user", this::register);
         Spark.delete("session", this::logout);
         Spark.get("/game", this::listGames);
+        Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
         Spark.exception(DataAccessException.class, this::FailerResponse);
 
 
@@ -39,6 +41,7 @@ public class Server {
         Spark.awaitInitialization();
         return Spark.port();
     }
+
 
     private String FailerResponse(DataAccessException exception, Request req, Response res){
         Gson serialize = new Gson();
@@ -91,12 +94,44 @@ public class Server {
             res.body(json);
             return json;
         }
+        if(Objects.equals(exception.getMessage(), "Game ID already exists")){
+            res.status(500);
+            request = new FailerResponse("Error: Game ID already exists");
+
+            String json = serialize.toJson(request);
+
+            res.body(json);
+            return json;
+        }
 
 
         return null;
 
 
     }
+
+
+    private String joinGame(Request req, Response res) {
+        Gson serialize = new Gson();
+        JoinGameRequest request = serialize.fromJson(req.body(), JoinGameRequest.class);
+        String auth = serialize.fromJson(req.headers("authhorization"), String.class);
+
+        new Service(userDAO, authDAO, gameDAO).joinGame(request, auth);
+
+        return null;
+    }
+
+    private String createGame(Request req, Response res) throws DataAccessException {
+        Gson serialize = new Gson();
+        GameData game = serialize.fromJson(req.body(), GameData.class);
+
+        GameData newGame = new Service(userDAO, authDAO, gameDAO).createGame(req.headers("authorization"), game);
+
+
+
+        return serialize.toJson(newGame);
+    }
+
 
     private String listGames(Request req, Response res) throws DataAccessException {
         Gson serialize = new Gson();
@@ -105,7 +140,7 @@ public class Server {
 
         String body = serialize.toJson(games);
 
-        ArrayList<gameData> list = new UserService(userDAO, authDAO, gameDAO).listGames(games);
+        ArrayList<GameData> list = new Service(userDAO, authDAO, gameDAO).listGames(games);
 
         String thing = serialize.toJson(list);
 
@@ -117,7 +152,7 @@ public class Server {
         String thing = serialize.fromJson(req.headers("authorization"), String.class);
 //        String request = serialize.fromJson(req.body(), String.class);
 
-        new UserService(userDAO, authDAO, gameDAO).logout(thing);
+        new Service(userDAO, authDAO, gameDAO).logout(thing);
 
         return "{}";
     }
@@ -126,7 +161,7 @@ public class Server {
         Gson serialize = new Gson();
         UserData request = serialize.fromJson(req.body(), UserData.class);
 
-        AuthData auth = new UserService(userDAO, authDAO, gameDAO).register(request);
+        AuthData auth = new Service(userDAO, authDAO, gameDAO).register(request);
 
         return serialize.toJson(auth);
     }
@@ -137,7 +172,7 @@ public class Server {
 
         String something = authDAO.toString();
 
-        AuthData auth = new UserService(userDAO, authDAO, gameDAO).login(request);
+        AuthData auth = new Service(userDAO, authDAO, gameDAO).login(request);
 
 
         return serialize.toJson(auth);

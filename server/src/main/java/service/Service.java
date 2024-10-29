@@ -1,32 +1,53 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import chess.ChessGame;
 import dataaccess.*;
-import model.LoginRequest;
-import model.AuthData;
-import model.RegesterRequest;
-import model.UserData;
-import model.gameData;
+import model.*;
 
-public class UserService {
+public class Service {
 
+    static int gameID = 0;
     UserDAO userDAO;
     AuthDAO authDAO;
     GameDAO gameDAO;
     // constructer that uses a userDAO
-    public UserService(UserDAO userDAO, AuthDAO authDAO, GameDAO gameDAO) {
+    public Service(UserDAO userDAO, AuthDAO authDAO, GameDAO gameDAO) {
         this.userDAO = userDAO;
         this.authDAO = authDAO;
         this.gameDAO = gameDAO;
     }
 
-    public ArrayList<gameData> listGames(String authToken) throws DataAccessException {
+    public void joinGame(JoinGameRequest game, String auth) {
+
+        GameData color = game;
+        String yes = "lalala";
+
+    }
+
+    public GameData createGame(String authToken, GameData game) throws DataAccessException {
+
+        gameID++;
+        if(game.gameName().isEmpty()){
+            throw new DataAccessException("bad request");
+        }
+        if (authDAO.getAuth(authToken) == null){
+            throw new DataAccessException("unauthorized");
+        }
+
+        gameDAO.createGame(new GameData(gameID, null, null, game.gameName(), new ChessGame()));
+
+        return new GameData(gameID, null, null, null, null);
+    }
+
+    public ArrayList<GameData> listGames(String authToken) throws DataAccessException {
 
         if (authDAO.getAuth(authToken) != null){
-            ArrayList<gameData> thing = new ArrayList<>(gameDAO.listGames());
+            ArrayList<GameData> thing = new ArrayList<>(gameDAO.listGames());
             gameDAO.listGames();
             return thing;
         }else {
@@ -98,8 +119,6 @@ public class UserService {
             authDAO.deleteAuth(authDAO.getAuth(auth));
 
         }
-        int i = 0;
-        i+=1;
 
     }
 

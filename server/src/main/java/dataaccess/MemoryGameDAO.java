@@ -1,23 +1,21 @@
 package dataaccess;
 
-import model.gameData;
+import model.GameData;
 
 import java.util.ArrayList;
 
 public class MemoryGameDAO implements GameDAO {
 
-    private final ArrayList<gameData> games = new ArrayList<>();
+    private final ArrayList<GameData> games = new ArrayList<>();
 
 
-    public void createGame() {
-
-        gameData game;
-//        games.add(game);
+    public void createGame(GameData game) {
+        games.add(game);
     }
 
 
-    public gameData getGame(int id) {
-        for (gameData game: games) {
+    public GameData getGame(int id) {
+        for (GameData game: games) {
             if(game.gameID() == id) {
                 return game;
             }
@@ -25,12 +23,12 @@ public class MemoryGameDAO implements GameDAO {
         return null; // need to throw an exception or something
     }
 
-    public ArrayList<gameData> listGames() {
+    public ArrayList<GameData> listGames() {
         return games;
     }
 
-    public gameData updateGame(gameData game) {
-        for (gameData gameIndex: games) {
+    public GameData updateGame(GameData game) {
+        for (GameData gameIndex: games) {
             if (game.gameID() == gameIndex.gameID()) {
                 gameIndex = game;
                 break;
