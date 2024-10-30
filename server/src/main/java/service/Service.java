@@ -73,12 +73,12 @@ public class Service {
         return new GameData(gameID, null, null, null, null);
     }
 
-    public ArrayList<GameData> listGames(String authToken) throws DataAccessException {
+    public ListGames listGames(String authToken) throws DataAccessException {
 
         if (authDAO.getAuth(authToken) != null){
             ArrayList<GameData> thing = new ArrayList<>(gameDAO.listGames());
 //            gameDAO.listGames();
-            return thing;
+            return new ListGames(thing);
         }else {
             throw new DataAccessException("unauthorized");
         }

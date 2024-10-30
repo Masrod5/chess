@@ -125,7 +125,7 @@ public class Server {
     private String joinGame(Request req, Response res) throws DataAccessException {
         Gson serialize = new Gson();
         JoinGameRequest request = serialize.fromJson(req.body(), JoinGameRequest.class);
-        String auth = serialize.fromJson(req.headers("authorization"), String.class);
+        String auth = req.headers("authorization");
 
         new Service(userDAO, authDAO, gameDAO).joinGame(request, auth);
 
@@ -148,12 +148,12 @@ public class Server {
 
     private String listGames(Request req, Response res) throws DataAccessException {
         Gson serialize = new Gson();
-        String games = serialize.fromJson(req.headers("authorization"), String.class);
+        String games = req.headers("authorization");
 
 
 //        String body = serialize.toJson(games);
 
-        List<GameData> list = new Service(userDAO, authDAO, gameDAO).listGames(games);
+        ListGames list = new Service(userDAO, authDAO, gameDAO).listGames(games);
 
 //        String thing = serialize.toJson(list);
 
