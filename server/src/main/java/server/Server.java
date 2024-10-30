@@ -1,5 +1,6 @@
 package server;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -31,6 +32,7 @@ public class Server {
         Spark.get("/game", this::listGames);
         Spark.post("/game", this::createGame);
         Spark.put("/game", this::joinGame);
+        Spark.delete("/db", this::clear);
         Spark.exception(DataAccessException.class, this::FailerResponse);
 
 
@@ -51,7 +53,7 @@ public class Server {
 
         if(Objects.equals(exception.getMessage(), "already taken")){
             res.status(403);
-            request = new FailerResponse("already taken");
+            request = new FailerResponse("Error: already taken");
 
             String json = serialize.toJson(request);
 
@@ -60,7 +62,7 @@ public class Server {
         }
         if(Objects.equals(exception.getMessage(), "bad request")){
             res.status(400);
-            request = new FailerResponse("bad request");
+            request = new FailerResponse("Error: bad request");
 
             String json = serialize.toJson(request);
 
@@ -110,15 +112,26 @@ public class Server {
 
     }
 
+    private String clear(Request req, Response res) throws DataAccessException{
+        Gson serialize = new Gson();
+        new Service(userDAO, authDAO, gameDAO).clear();
 
-    private String joinGame(Request req, Response res) {
+
+
+        return "{}";
+    }
+
+
+    private String joinGame(Request req, Response res) throws DataAccessException {
         Gson serialize = new Gson();
         JoinGameRequest request = serialize.fromJson(req.body(), JoinGameRequest.class);
-        String auth = serialize.fromJson(req.headers("authhorization"), String.class);
+        String auth = serialize.fromJson(req.headers("authorization"), String.class);
 
         new Service(userDAO, authDAO, gameDAO).joinGame(request, auth);
 
-        return null;
+
+
+        return "{}";
     }
 
     private String createGame(Request req, Response res) throws DataAccessException {
@@ -138,11 +151,11 @@ public class Server {
         String games = serialize.fromJson(req.headers("authorization"), String.class);
 
 
-        String body = serialize.toJson(games);
+//        String body = serialize.toJson(games);
 
-        ArrayList<GameData> list = new Service(userDAO, authDAO, gameDAO).listGames(games);
+        List<GameData> list = new Service(userDAO, authDAO, gameDAO).listGames(games);
 
-        String thing = serialize.toJson(list);
+//        String thing = serialize.toJson(list);
 
         return serialize.toJson(list);
     }
@@ -177,11 +190,6 @@ public class Server {
 
         return serialize.toJson(auth);
     }
-
-//    private String listGames(Request req, Response res) {
-//        Gson serialize = new Gson();
-//
-//    }
 
     public void stop() {
         Spark.stop();

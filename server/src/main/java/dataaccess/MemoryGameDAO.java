@@ -3,11 +3,15 @@ package dataaccess;
 import model.GameData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MemoryGameDAO implements GameDAO {
 
-    private final ArrayList<GameData> games = new ArrayList<>();
+    private final List<GameData> games = new ArrayList<>();
 
+    public void clear() {
+        games.clear();
+    }
 
     public void createGame(GameData game) {
         games.add(game);
@@ -23,18 +27,18 @@ public class MemoryGameDAO implements GameDAO {
         return null; // need to throw an exception or something
     }
 
-    public ArrayList<GameData> listGames() {
+    public List<GameData> listGames() {
         return games;
     }
 
-    public GameData updateGame(GameData game) {
-        for (GameData gameIndex: games) {
-            if (game.gameID() == gameIndex.gameID()) {
-                gameIndex = game;
-                break;
+    public void updateGame(GameData newGame) {
+        int index = 0;
+        for (GameData game: games) {
+            if (game.gameID() == newGame.gameID()) {
+                games.set(index, newGame);
             }
+            index++;
         }
-        return game;
     }
 
 
