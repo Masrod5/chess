@@ -21,7 +21,6 @@ public class MemoryAuthDAO implements AuthDAO {
     @Override
     public void createAuth(AuthData auth) {
         authTokens.add(auth);
-
     }
 
     @Override
@@ -35,13 +34,8 @@ public class MemoryAuthDAO implements AuthDAO {
         return null;
     }
 
-    public int getSize(){
-        return authTokens.size();
-    }
-
     public void deleteAuth(AuthData auth){
         authTokens.remove(auth);
-
     }
 
 }
