@@ -77,9 +77,8 @@ public class Service {
     public ListGames listGames(String authToken) throws DataAccessException {
 
         if (authDAO.getAuth(authToken) != null){
-            ArrayList<GameData> thing = new ArrayList<>(gameDAO.listGames());
-//            gameDAO.listGames();
-            return new ListGames(thing);
+            ArrayList<GameData> games = new ArrayList<>(gameDAO.listGames());
+            return new ListGames(games);
         }else {
             throw new DataAccessException("unauthorized");
         }
@@ -109,8 +108,6 @@ public class Service {
         }
 
         throw new DataAccessException("already taken");
-//        return null;
-
     }
 
 
@@ -120,14 +117,10 @@ public class Service {
         UserData info = userDAO.getUser(user.username());
 
         if (info != null && BCrypt.checkpw(user.password(), info.password())){
-
             AuthData newAuth = new AuthData(generateToken(), user.username());
-
             authDAO.createAuth(newAuth);
-
             return newAuth;
         }
-
         throw new DataAccessException("unauthorized");
     }
 
@@ -137,18 +130,10 @@ public class Service {
     }
 
     public void logout(String auth) throws DataAccessException {
-
-
-//        String user = auth.authToken();
         if (auth == null || authDAO.getAuth(auth) == null){
             throw new DataAccessException("unauthorized");
         }
 
-//        if (auth != null && authDAO.getAuth(auth) != null){
-            authDAO.deleteAuth(authDAO.getAuth(auth));
-
-//        }
-
+        authDAO.deleteAuth(authDAO.getAuth(auth));
     }
-
 }
