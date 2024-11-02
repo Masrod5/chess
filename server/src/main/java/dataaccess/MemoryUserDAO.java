@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -18,8 +19,11 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     public UserData createUser(UserData user) {
-        users.add(user);
-        return user;
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        UserData newUser = new UserData(user.username(), hashedPassword, user.email());
+
+        users.add(newUser);
+        return newUser;
     }
 
     public UserData getUser(String user){

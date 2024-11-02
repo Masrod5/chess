@@ -10,12 +10,12 @@ import spark.*;
 
 public class Server {
 
-    UserDAO userDAO = new MemoryUserDAO();
-    AuthDAO authDAO = new MemoryAuthDAO();
-    GameDAO gameDAO = new MemoryGameDAO();
-//    UserDAO userDAO;
-//    AuthDAO authDAO;
-//    GameDAO gameDAO;
+//    UserDAO userDAO = new MemoryUserDAO();
+//    AuthDAO authDAO = new MemoryAuthDAO();
+//    GameDAO gameDAO = new MemoryGameDAO();
+    UserDAO userDAO;
+    AuthDAO authDAO;
+    GameDAO gameDAO;
 
 
     public int run(int desiredPort) {
@@ -23,14 +23,14 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-//        try {
-//            userDAO = new MySQLUserDAO();
-//            gameDAO = new MySQLGameDAO();
-//            authDAO = new MySQLAuthDAO();
-//
-//        } catch (DataAccessException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            userDAO = new MySQLUserDAO();
+            gameDAO = new MySQLGameDAO();
+            authDAO = new MySQLAuthDAO();
+
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
 
 
         // Register your endpoints and handle exceptions here.
