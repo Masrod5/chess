@@ -17,7 +17,6 @@ public class MemoryGameDAO implements GameDAO {
         games.add(game);
     }
 
-
     public GameData getGame(int id) {
         for (GameData game: games) {
             if(game.gameID() == id) {
@@ -40,7 +39,4 @@ public class MemoryGameDAO implements GameDAO {
             index++;
         }
     }
-
-
-
 }
