@@ -24,12 +24,12 @@ public class Service {
     }
 
     public void joinGame(JoinGameRequest request, String auth) throws DataAccessException {
-        if (request.playerColor() == null){
+        if (request.playerColor() == null || gameDAO.getGame(request.gameID()) == null){
             throw new DataAccessException("bad request");
         }
-        if (gameDAO.getGame(request.gameID()) == null){
-            throw new DataAccessException("bad request");
-        }
+//        if (){
+//            throw new DataAccessException("bad request");
+//        }
         if (authDAO.getAuth(auth) == null) {
             throw new DataAccessException("unauthorized");
         }
