@@ -139,44 +139,8 @@ public class MySQLGameDAO implements GameDAO{
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-        GameData oldGame = getGame(game.gameID());
-//        Gson json = new Gson();
-        var jsonGame = new Gson().toJson(game);
         var statement = "UPDATE GAME SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID=?";
         var gameJson = new Gson().toJson(game.game());
-        var json = new Gson().toJson(game);
         executeUpdate(statement, game.whiteUsername(), game.blackUsername(), game.gameName(), gameJson, game.gameID());
-
-//        try (var conn = DatabaseManager.getConnection()) {
-//            Gson json = new Gson();
-
-//            try (var preparedStatement = conn.prepareStatement("UPDATE GAME SET whiteUsername=? WHERE gameID=?")) {
-//                preparedStatement.setInt(1, game.gameID());
-//                preparedStatement.setString(2, game.whiteUsername());
-//                preparedStatement.setString(3, game.blackUsername());
-//                preparedStatement.setString(4, game.gameName());
-
-//                var test = json.toJson((game.game()));
-//                preparedStatement.setObject(5, game.game());
-//                preparedStatement.setString(4, test);
-
-
-//                String statement = preparedStatement.toString();
-
-//                executeUpdate(preparedStatement.toString(), game.whiteUsername(), game.blackUsername(), game.game());
-//                preparedStatement.executeUpdate();
-//            }
-//            try (var preparedStatement = conn.prepareStatement("UPDATE GAME SET blackUsername=? WHERE gameID=?")) {
-//                preparedStatement.setInt(1, game.gameID());
-//                preparedStatement.setString(2, game.blackUsername());
-//
-//                preparedStatement.executeUpdate();
-//            }
-
-
-//            } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
     }
 }
