@@ -9,7 +9,7 @@ public interface UserDAO {
             getUser: Retrieve a user with the given username.
      */
     void clear() throws DataAccessException;
-    void createUser(UserData user) throws DataAccessException;
+    UserData createUser(UserData user) throws DataAccessException;
     UserData getUser(String username) throws DataAccessException;
 
 }

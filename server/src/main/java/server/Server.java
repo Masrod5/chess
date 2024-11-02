@@ -13,14 +13,27 @@ import spark.*;
 
 public class Server {
 
-    UserDAO userDAO = new MemoryUserDAO();
-    AuthDAO authDAO = new MemoryAuthDAO();
-    GameDAO gameDAO = new MemoryGameDAO();
+//    UserDAO userDAO = new MemoryUserDAO();
+//    AuthDAO authDAO = new MemoryAuthDAO();
+//    GameDAO gameDAO = new MemoryGameDAO();
+    UserDAO userDAO;
+    AuthDAO authDAO;
+    GameDAO gameDAO;
+
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        try {
+            userDAO = new MySQLUserDAO();
+            gameDAO = new MySQLGameDAO();
+            authDAO = new MySQLAuthDAO();
+
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
 
 
         // Register your endpoints and handle exceptions here.
@@ -86,28 +99,28 @@ public class Server {
 
             res.body(json);
             return json;
-        }
-        if(Objects.equals(exception.getMessage(), "you are logged in")){
+        } //(Objects.equals(exception.getMessage(), "you are logged in"))
+        else {
             res.status(500);
-            request = new FailerResponse("Error: you are logged in");
+            request = new FailerResponse(exception.getMessage());
 
             String json = serialize.toJson(request);
 
             res.body(json);
             return json;
         }
-        if(Objects.equals(exception.getMessage(), "Game ID already exists")){
-            res.status(500);
-            request = new FailerResponse("Error: Game ID already exists");
+//        if(Objects.equals(exception.getMessage(), "Game ID already exists")){
+//            res.status(500);
+//            request = new FailerResponse("Error: Game ID already exists");
+//
+//            String json = serialize.toJson(request);
+//
+//            res.body(json);
+//            return json;
+//        }
 
-            String json = serialize.toJson(request);
 
-            res.body(json);
-            return json;
-        }
-
-
-        return null;
+//        return null;
 
 
     }

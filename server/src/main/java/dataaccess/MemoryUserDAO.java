@@ -17,12 +17,13 @@ public class MemoryUserDAO implements UserDAO {
         users.clear();
     }
 
-    public void createUser(UserData user) {
+    public UserData createUser(UserData user) {
 //        if (users.contains(user)) {
 //            throw DataAccessException;
 //        }
         users.add(user);
 //        return user;
+        return user;
     }
 
     public UserData getUser(String user){

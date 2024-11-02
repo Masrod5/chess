@@ -8,6 +8,7 @@ import java.util.UUID;
 import chess.ChessGame;
 import dataaccess.*;
 import model.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class Service {
 
@@ -118,16 +119,10 @@ public class Service {
         // get user by username
         UserData info = userDAO.getUser(user.username());
 
-        if (info != null && Objects.equals(user.password(), info.password())){
-
+        if (info != null && BCrypt.checkpw(user.password(), info.password())){
 
             AuthData newAuth = new AuthData(generateToken(), user.username());
 
-//            String test = authDAO.toString();
-
-//            if (authDAO.toString() == "this"){
-//                throw new DataAccessException("you are logged in");
-//            }
             authDAO.createAuth(newAuth);
 
             return newAuth;
