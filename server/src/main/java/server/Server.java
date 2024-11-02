@@ -49,10 +49,6 @@ public class Server {
         Spark.exception(DataAccessException.class, this::FailerResponse);
 
 
-
-        //This line initializes the server and can be removed once you have a functioning endpoint 
-//        Spark.init();
-
         Spark.awaitInitialization();
         return Spark.port();
     }
@@ -109,28 +105,13 @@ public class Server {
             res.body(json);
             return json;
         }
-//        if(Objects.equals(exception.getMessage(), "Game ID already exists")){
-//            res.status(500);
-//            request = new FailerResponse("Error: Game ID already exists");
-//
-//            String json = serialize.toJson(request);
-//
-//            res.body(json);
-//            return json;
-//        }
 
-
-//        return null;
 
 
     }
 
     private String clear(Request req, Response res) throws DataAccessException{
-        Gson serialize = new Gson();
         new Service(userDAO, authDAO, gameDAO).clear();
-
-
-
         return "{}";
     }
 
@@ -142,8 +123,6 @@ public class Server {
 
         new Service(userDAO, authDAO, gameDAO).joinGame(request, auth);
 
-
-
         return "{}";
     }
 
@@ -153,8 +132,6 @@ public class Server {
 
         GameData newGame = new Service(userDAO, authDAO, gameDAO).createGame(req.headers("authorization"), game);
 
-
-
         return serialize.toJson(newGame);
     }
 
@@ -163,12 +140,7 @@ public class Server {
         Gson serialize = new Gson();
         String games = req.headers("authorization");
 
-
-//        String body = serialize.toJson(games);
-
         ListGames list = new Service(userDAO, authDAO, gameDAO).listGames(games);
-
-//        String thing = serialize.toJson(list);
 
         return serialize.toJson(list);
     }
@@ -176,7 +148,6 @@ public class Server {
     private String logout(Request req, Response res) throws DataAccessException {
         Gson serialize = new Gson();
         String thing = serialize.fromJson(req.headers("authorization"), String.class);
-//        String request = serialize.fromJson(req.body(), String.class);
 
         new Service(userDAO, authDAO, gameDAO).logout(thing);
 
@@ -196,10 +167,7 @@ public class Server {
         Gson serialize = new Gson();
         LoginRequest request = serialize.fromJson(req.body(), LoginRequest.class);
 
-        String something = authDAO.toString();
-
         AuthData auth = new Service(userDAO, authDAO, gameDAO).login(request);
-
 
         return serialize.toJson(auth);
     }
