@@ -18,11 +18,7 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     public UserData createUser(UserData user) {
-//        if (users.contains(user)) {
-//            throw DataAccessException;
-//        }
         users.add(user);
-//        return user;
         return user;
     }
 
@@ -34,6 +30,4 @@ public class MemoryUserDAO implements UserDAO {
         }
         return null;
     }
-
-
 }
