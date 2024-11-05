@@ -43,7 +43,7 @@ public class Server {
         Spark.post("/game", this::createGame);
         Spark.put("/game", this::joinGame);
         Spark.delete("/db", this::clear);
-        Spark.exception(DataAccessException.class, this::FailerResponse);
+        Spark.exception(DataAccessException.class, this::failerResponse);
 
 
         Spark.awaitInitialization();
@@ -51,7 +51,7 @@ public class Server {
     }
 
 
-    private String FailerResponse(DataAccessException exception, Request req, Response res){
+    private String failerResponse(DataAccessException exception, Request req, Response res){
         Gson serialize = new Gson();
         FailerResponse request = serialize.fromJson(req.body(), FailerResponse.class);
 
