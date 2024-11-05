@@ -116,16 +116,7 @@ public class ChessPiece {
                 row += 1;
                 col += 1;
                 if (row <= 8 && col <= 8 && board.getPiece(new ChessPosition(row, col)) != null) {
-                    if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor) {
-                        if (row == 8) {
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.ROOK));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.KNIGHT));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.BISHOP));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.QUEEN));
-                        } else {
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-                        }
-                    }
+                    gettingPromotion(board, myPosition, moves, row, col);
                 }
                 /** capture left */
                 row = myPosition.getRow();
@@ -133,16 +124,7 @@ public class ChessPiece {
                 row += 1;
                 col -= 1;
                 if (row <= 8 && col >= 1 && board.getPiece(new ChessPosition(row, col)) != null) {
-                    if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor) {
-                        if (row == 8) {
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.ROOK));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.KNIGHT));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.BISHOP));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.QUEEN));
-                        } else {
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-                        }
-                    }
+                    gettingPromotion(board, myPosition, moves, row, col);
                 }
             }
 
@@ -177,16 +159,7 @@ public class ChessPiece {
                 row -= 1;
                 col += 1;
                 if (row >= 1 && col <= 8 && board.getPiece(new ChessPosition(row, col)) != null) {
-                    if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor) {
-                        if (row == 1) {
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.ROOK));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.KNIGHT));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.BISHOP));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.QUEEN));
-                        } else {
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-                        }
-                    }
+                    gettingPromotionBlack(board, myPosition, moves, row, col);
                 }
                 /** capture left */
                 row = myPosition.getRow();
@@ -194,16 +167,7 @@ public class ChessPiece {
                 row -= 1;
                 col -= 1;
                 if (row >= 1 && col >= 1 && board.getPiece(new ChessPosition(row, col)) != null) {
-                    if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor) {
-                        if (row == 1) {
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.ROOK));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.KNIGHT));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.BISHOP));
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.QUEEN));
-                        } else {
-                            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-                        }
-                    }
+                    gettingPromotionBlack(board, myPosition, moves, row, col);
                 }
             }
         }
@@ -551,6 +515,32 @@ public class ChessPiece {
 
 
         return moves;
+    }
+
+    private void gettingPromotionBlack(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> moves, int row, int col) {
+        if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor) {
+            if (row == 1) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.ROOK));
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.KNIGHT));
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.BISHOP));
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.QUEEN));
+            } else {
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+            }
+        }
+    }
+
+    private void gettingPromotion(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> moves, int row, int col) {
+        if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor) {
+            if (row == 8) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.ROOK));
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.KNIGHT));
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.BISHOP));
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), PieceType.QUEEN));
+            } else {
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+            }
+        }
     }
 
     /** blocked
