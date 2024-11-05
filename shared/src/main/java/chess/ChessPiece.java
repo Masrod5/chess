@@ -267,69 +267,48 @@ public class ChessPiece {
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN) {
             moving(board, myPosition, moves);
-            row = myPosition.getRow();
-            col = myPosition.getColumn();
-            while (row < 8){
-                row += 1;
-                if (blocked(board, myPosition, moves, row, col)){break;}
-                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-            }
-            row = myPosition.getRow();
-            col = myPosition.getColumn();
-            while (row > 1){
-                row -= 1;
-                if (blocked(board, myPosition, moves, row, col)){break;}
-                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-            }
-            row = myPosition.getRow();
-            col = myPosition.getColumn();
-            while (col > 1){
-                col -= 1;
-                if (blocked(board, myPosition, moves, row, col)){break;}
-                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-            }
-            row = myPosition.getRow();
-            col = myPosition.getColumn();
-            while (col < 8){
-                col += 1;
-                if (blocked(board, myPosition, moves, row, col)){break;}
-                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-            }
+            addingMoves(board, myPosition, moves);
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.BISHOP){
             moving(board, myPosition, moves);
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK){
-            row = myPosition.getRow();
-            col = myPosition.getColumn();
-            while (row < 8){
-                row += 1;
-                if (blocked(board, myPosition, moves, row, col)){break;}
-                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-            }
-            row = myPosition.getRow();
-            col = myPosition.getColumn();
-            while (row > 1){
-                row -= 1;
-                if (blocked(board, myPosition, moves, row, col)){break;}
-                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-            }
-            row = myPosition.getRow();
-            col = myPosition.getColumn();
-            while (col > 1){
-                col -= 1;
-                if (blocked(board, myPosition, moves, row, col)){ break;}
-                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-            }
-            row = myPosition.getRow();
-            col = myPosition.getColumn();
-            while (col < 8){
-                col += 1;
-                if (blocked(board, myPosition, moves, row, col)){ break;}
-                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-            }
+            addingMoves(board, myPosition, moves);
         }
         return moves;
+    }
+
+    private void addingMoves(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> moves) {
+        int row;
+        int col;
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        while (row < 8){
+            row += 1;
+            if (blocked(board, myPosition, moves, row, col)){break;}
+            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+        }
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        while (row > 1){
+            row -= 1;
+            if (blocked(board, myPosition, moves, row, col)){break;}
+            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+        }
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        while (col > 1){
+            col -= 1;
+            if (blocked(board, myPosition, moves, row, col)){break;}
+            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+        }
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        while (col < 8){
+            col += 1;
+            if (blocked(board, myPosition, moves, row, col)){break;}
+            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+        }
     }
 
     private void moving(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> moves) {
