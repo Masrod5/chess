@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import static chess.ChessPiece.PieceType.KING;
+
 /**
  * For a class that can manage a chess game, making moves on a board
  * <p>
@@ -64,12 +66,12 @@ public class ChessGame {
             ChessGame tempGame = new ChessGame();
             tempGame.setBoard(tempBoard);
 
-            ChessPiece piece = new ChessPiece(tempBoard.getPiece(moves.get(i).getStartPosition()).getTeamColor(), tempBoard.getPiece(moves.get(i).getStartPosition()).getPieceType());
+            var newPiece = tempBoard.getPiece(moves.get(i).getStartPosition());
 
             tempBoard.addPiece(moves.get(i).getStartPosition(), null);
-            tempBoard.addPiece(moves.get(i).getEndPosition(), piece);
+            tempBoard.addPiece(moves.get(i).getEndPosition(), newPiece);
 
-            if (!tempGame.isInCheck(piece.getTeamColor())) {
+            if (!tempGame.isInCheck(newPiece.getTeamColor())) {
 //                System.out.println("lol");
                 newMoves.add(moves.get(i));
             }
@@ -175,8 +177,8 @@ public class ChessGame {
         /** finds the position of your king */
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
-                if (board.getPiece(new ChessPosition(i, j)) != null) {
-                    if (board.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING && board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor) {
+                if (board.getPiece(new ChessPosition(i, j)) != null && board.getPiece(new ChessPosition(i, j)).getPieceType() == KING) {
+                    if (board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor) {
                         king = new ChessPosition(i, j);
                     }
                 }
@@ -214,7 +216,10 @@ public class ChessGame {
             ChessGame tempGame = new ChessGame();
             tempGame.setBoard(tempBoard);
 
-            ChessPiece piece = new ChessPiece(tempBoard.getPiece(moves.get(i).getStartPosition()).getTeamColor(), tempBoard.getPiece(moves.get(i).getStartPosition()).getPieceType());
+            ChessPiece tempPiece = tempBoard.getPiece(moves.get(i).getStartPosition());
+
+
+            ChessPiece piece = new ChessPiece(tempPiece.getTeamColor(), tempPiece.getPieceType());
 
             tempBoard.addPiece(moves.get(i).getStartPosition(), null);
             tempBoard.addPiece(moves.get(i).getEndPosition(), piece);

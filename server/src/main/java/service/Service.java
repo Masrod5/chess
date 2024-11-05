@@ -26,9 +26,7 @@ public class Service {
         if (request.playerColor() == null || gameDAO.getGame(request.gameID()) == null){
             throw new DataAccessException("bad request");
         }
-//        if (){
-//            throw new DataAccessException("bad request");
-//        }
+
         if (authDAO.getAuth(auth) == null) {
             throw new DataAccessException("unauthorized");
         }
@@ -40,7 +38,9 @@ public class Service {
                 throw new DataAccessException("already taken");
             }
             GameData oldGame = gameDAO.getGame(request.gameID());
-            GameData updatedGame = new GameData(oldGame.gameID(), authDAO.getAuth(auth).username(), oldGame.blackUsername(), oldGame.gameName(), oldGame.game());
+            String newName = authDAO.getAuth(auth).username();
+            String oldBlack = oldGame.blackUsername();
+            GameData updatedGame = new GameData(oldGame.gameID(), newName, oldBlack, oldGame.gameName(), oldGame.game());
 
             gameDAO.updateGame(updatedGame);
         } else
@@ -49,7 +49,8 @@ public class Service {
                 throw new DataAccessException("already taken");
             }
             GameData oldGame = gameDAO.getGame(request.gameID());
-            GameData updatedGame = new GameData(oldGame.gameID(), oldGame.whiteUsername(), authDAO.getAuth(auth).username(), oldGame.gameName(), oldGame.game());
+            String newName = authDAO.getAuth(auth).username();
+            GameData updatedGame = new GameData(oldGame.gameID(), oldGame.whiteUsername(), newName, oldGame.gameName(), oldGame.game());
 
             gameDAO.updateGame(updatedGame);
         } else {
