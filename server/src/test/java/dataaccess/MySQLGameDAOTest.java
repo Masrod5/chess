@@ -110,7 +110,38 @@ class MySQLGameDAOTest {
 
 
 
-    @Test
-    void updateGame() {
+    @ParameterizedTest
+    @ValueSource(classes = {MySQLGameDAO.class, MemoryGameDAO.class})
+    void updateGameSuccessful() throws Exception {
+
+        GameDAO dataAccess = new MySQLGameDAO();
+        dataAccess.createGame(new GameData(1, "null", "null", "gameName", new ChessGame()));
+        var oldGame = dataAccess.getGame(1);
+
+        dataAccess.updateGame(new GameData(1, "white", "null", "gameName", new ChessGame()));
+        var newGame = new GameData(1, "white", "null", "gameName", new ChessGame());
+
+        assertNotEquals(oldGame, newGame);
+
     }
+
+    @ParameterizedTest
+    @ValueSource(classes = {MySQLGameDAO.class, MemoryGameDAO.class})
+    void updateGameBadRequest() throws Exception {
+
+        GameDAO dataAccess = new MySQLGameDAO();
+        dataAccess.createGame(new GameData(1, "null", "null", "gameName", new ChessGame()));
+        var oldGame = dataAccess.getGame(1);
+
+        dataAccess.updateGame(new GameData(1, "white", "null", "gameName", new ChessGame()));
+        var newGame = new GameData(1, "white", "null", "gameName", new ChessGame());
+
+        assertThrows(DataAccessException.class, () -> {
+            dataAccess.updateGame(new GameData(1, "white", "null", "gameName", new ChessGame()));
+            dataAccess.updateGame(new GameData(1, "white", null, "gameName", new ChessGame()));
+
+            throw new DataAccessException("");
+        });
+    }
+
 }
