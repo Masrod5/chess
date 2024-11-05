@@ -67,75 +67,12 @@ public class ChessPiece {
         int row;
         int col;
         if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN){
-            /** don't forget to add promotion pieces if the hit the end */
-            /** move forward one */
-            if (board.getPiece(myPosition).pieceColor == ChessGame.TeamColor.WHITE) {
-                row = myPosition.getRow();
-                col = myPosition.getColumn();
-                row += 1;
-                if (row <= 8 && board.getPiece(new ChessPosition(row, col)) == null) {
-                    if (row == 8) {
-                        promotionPieceBlack(myPosition, moves, row, col);
-                    } else {
-                        moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-                    }
-                }
-                row = myPosition.getRow();                /** initial move of two, check for piece right in front of it */
-                col = myPosition.getColumn();
-                row += 1;
-                if (row == 3 && board.getPiece(new ChessPosition(row, col)) == null) {
-                    row += 1;
-                    if (row == 4 && board.getPiece(new ChessPosition(row, col)) == null) {
-                        moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-                    }
-                }
-                row = myPosition.getRow();                /** capture right */
-                col = myPosition.getColumn();
-                row += 1;
-                col += 1;
-                if (row <= 8 && col <= 8 && board.getPiece(new ChessPosition(row, col)) != null) {
-                    gettingPromotion(board, myPosition, moves, row, col);
-                }
-                row = myPosition.getRow();                /** capture left */
-                col = myPosition.getColumn();
-                row += 1;
-                col -= 1;
-                if (row <= 8 && col >= 1 && board.getPiece(new ChessPosition(row, col)) != null) {
-                    gettingPromotion(board, myPosition, moves, row, col);
-                }
-            }
-            if (board.getPiece(myPosition).pieceColor == ChessGame.TeamColor.BLACK) {
-                row = myPosition.getRow();
-                col = myPosition.getColumn();
-                row -= 1;
-                if (row >= 1 && board.getPiece(new ChessPosition(row, col)) == null) {
-                    alsoGettingPromotionBlack(myPosition, moves, row, col);
-                }
-                row = myPosition.getRow();                /** initial move of two, check for piece right in front of it */
-                col = myPosition.getColumn();
-                row -= 1;
-                if (row == 6 && board.getPiece(new ChessPosition(row, col)) == null) {
-                    row -= 1;
-                    if (row == 5 && board.getPiece(new ChessPosition(row, col)) == null) {
-                        moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-                    }
-                }
-                row = myPosition.getRow();                /** capture right */
-                col = myPosition.getColumn();
-                row -= 1;
-                col += 1;
-                if (row >= 1 && col <= 8 && board.getPiece(new ChessPosition(row, col)) != null) {
-                    gettingPromotionBlack(board, myPosition, moves, row, col);
-                }
-                row = myPosition.getRow();                /** capture left */
-                col = myPosition.getColumn();
-                row -= 1;
-                col -= 1;
-                if (row >= 1 && col >= 1 && board.getPiece(new ChessPosition(row, col)) != null) {
-                    gettingPromotionBlack(board, myPosition, moves, row, col);
-                }
-            }
+            moves.addAll(pieceMovesPawn(board, myPosition));
         }
+        if (board.getPiece(myPosition).getPieceType() == PieceType.KING){
+            moves.addAll(pieceMovesKing(board, myPosition));
+        }
+
         if (board.getPiece(myPosition).getPieceType() == PieceType.KNIGHT){
             row = myPosition.getRow();
             col = myPosition.getColumn();
@@ -195,6 +132,23 @@ public class ChessPiece {
             }
 
         }
+        if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN) {
+            moving(board, myPosition, moves);
+            addingMoves(board, myPosition, moves);
+        }
+        if (board.getPiece(myPosition).getPieceType() == PieceType.BISHOP){
+            moving(board, myPosition, moves);
+        }
+        if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK){
+            addingMoves(board, myPosition, moves);
+        }
+        return moves;
+    }
+
+    public ArrayList<ChessMove> pieceMovesKing(ChessBoard board, ChessPosition myPosition) {
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        int row;
+        int col;
         if (board.getPiece(myPosition).getPieceType() == PieceType.KING) {
             row = myPosition.getRow();
             col = myPosition.getColumn();
@@ -265,15 +219,82 @@ public class ChessPiece {
                 }
             }
         }
-        if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN) {
-            moving(board, myPosition, moves);
-            addingMoves(board, myPosition, moves);
-        }
-        if (board.getPiece(myPosition).getPieceType() == PieceType.BISHOP){
-            moving(board, myPosition, moves);
-        }
-        if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK){
-            addingMoves(board, myPosition, moves);
+        return moves;
+    }
+
+    public ArrayList<ChessMove> pieceMovesPawn(ChessBoard board, ChessPosition myPosition) {
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        int row;
+        int col;
+        if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN){
+            /** don't forget to add promotion pieces if the hit the end */
+            /** move forward one */
+            if (board.getPiece(myPosition).pieceColor == ChessGame.TeamColor.WHITE) {
+                row = myPosition.getRow();
+                col = myPosition.getColumn();
+                row += 1;
+                if (row <= 8 && board.getPiece(new ChessPosition(row, col)) == null) {
+                    if (row == 8) {
+                        promotionPieceBlack(myPosition, moves, row, col);
+                    } else {
+                        moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+                    }
+                }
+                row = myPosition.getRow();                /** initial move of two, check for piece right in front of it */
+                col = myPosition.getColumn();
+                row += 1;
+                if (row == 3 && board.getPiece(new ChessPosition(row, col)) == null) {
+                    row += 1;
+                    if (board.getPiece(new ChessPosition(row, col)) == null) {
+                        moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+                    }
+                }
+                row = myPosition.getRow();                /** capture right */
+                col = myPosition.getColumn();
+                row += 1;
+                col += 1;
+                if (row <= 8 && col <= 8 && board.getPiece(new ChessPosition(row, col)) != null) {
+                    gettingPromotion(board, myPosition, moves, row, col);
+                }
+                row = myPosition.getRow();                /** capture left */
+                col = myPosition.getColumn();
+                row += 1;
+                col -= 1;
+                if (row <= 8 && col >= 1 && board.getPiece(new ChessPosition(row, col)) != null) {
+                    gettingPromotion(board, myPosition, moves, row, col);
+                }
+            }
+            if (board.getPiece(myPosition).pieceColor == ChessGame.TeamColor.BLACK) {
+                row = myPosition.getRow();
+                col = myPosition.getColumn();
+                row -= 1;
+                if (row >= 1 && board.getPiece(new ChessPosition(row, col)) == null) {
+                    alsoGettingPromotionBlack(myPosition, moves, row, col);
+                }
+                row = myPosition.getRow();                /** initial move of two, check for piece right in front of it */
+                col = myPosition.getColumn();
+                row -= 1;
+                if (row == 6 && board.getPiece(new ChessPosition(row, col)) == null) {
+                    row -= 1;
+                    if (row == 5 && board.getPiece(new ChessPosition(row, col)) == null) {
+                        moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+                    }
+                }
+                row = myPosition.getRow();                /** capture right */
+                col = myPosition.getColumn();
+                row -= 1;
+                col += 1;
+                if (row >= 1 && col <= 8 && board.getPiece(new ChessPosition(row, col)) != null) {
+                    gettingPromotionBlack(board, myPosition, moves, row, col);
+                }
+                row = myPosition.getRow();                /** capture left */
+                col = myPosition.getColumn();
+                row -= 1;
+                col -= 1;
+                if (row >= 1 && col >= 1 && board.getPiece(new ChessPosition(row, col)) != null) {
+                    gettingPromotionBlack(board, myPosition, moves, row, col);
+                }
+            }
         }
         return moves;
     }
@@ -367,7 +388,7 @@ public class ChessPiece {
         }
     }
     private void gettingPromotion(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> moves, int row, int col) {
-        if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor) {
+        if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor && true) {
             if (row == 8) {
                 promotionPieceBlack(myPosition, moves, row, col);
             } else {
