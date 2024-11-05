@@ -34,7 +34,9 @@ public class MySQLAuthDAO implements AuthDAO{
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) { // get the prepared statement
                 for (var i = 0; i < params.length-1; i++) {
                     var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p); //set all the parameters
+                    if (param instanceof String p) {
+                        ps.setString(i + 1, p); //set all the parameters
+                    }
                 }
                 ps.executeUpdate();
 
