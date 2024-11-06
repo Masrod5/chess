@@ -236,10 +236,14 @@ public class ChessPiece {
                 if (row <= 8 && board.getPiece(new ChessPosition(row, col)) == null) {
                     if (row == 8) {
                         promotionPieceBlack(myPosition, moves, row, col);
-                    } else {
+                    } else if (row == 7){
+
+                    }else {
                         moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
                     }
                 }
+//                gettingPromotion(board, myPosition, moves, row, col);
+
                 row = myPosition.getRow();                /** initial move of two, check for piece right in front of it */
                 col = myPosition.getColumn();
                 row += 1;
