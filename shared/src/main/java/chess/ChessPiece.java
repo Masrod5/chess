@@ -388,7 +388,7 @@ public class ChessPiece {
         }
     }
     private void gettingPromotion(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> moves, int row, int col) {
-        if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor && true) {
+        if (board.getPiece(new ChessPosition(row, col)).pieceColor != this.pieceColor) {
             if (row == 8) {
                 promotionPieceBlack(myPosition, moves, row, col);
             } else {
