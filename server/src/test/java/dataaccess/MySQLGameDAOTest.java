@@ -67,6 +67,7 @@ class MySQLGameDAOTest {
         dataAccess.createGame(new GameData(1, "white", "black", "gameName", new ChessGame()));
 
         assertNotNull(dataAccess.getGame(1));
+
     }
 
     @ParameterizedTest
