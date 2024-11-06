@@ -18,6 +18,10 @@ public class MySQLAuthDAO implements AuthDAO{
     }
 
     private void configureDatabase() throws DataAccessException {
+        createDatabase(createStatements);
+    }
+
+    static void createDatabase(String[] createStatements) throws DataAccessException {
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {
