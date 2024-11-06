@@ -40,7 +40,9 @@ class MySQLGameDAOTest {
         GameDAO dataAccess = new MySQLGameDAO();
         dataAccess.createGame(new GameData(1, "white", "black", "gameName", new ChessGame()));
 
-        assertNotNull(dataAccess.getGame(1));
+        var expected = new GameData(1, "white", "black", "gameName", new ChessGame());
+
+        assertEquals(dataAccess.getGame(1), expected);
     }
 
     @ParameterizedTest
