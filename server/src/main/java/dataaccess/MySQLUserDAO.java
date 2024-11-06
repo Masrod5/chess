@@ -7,6 +7,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//import static dataaccess.MySQLGameDAO.executeUpdate;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -34,7 +35,7 @@ public class MySQLUserDAO implements UserDAO{
 
     }
 
-    private void executeUpdate(String statement, Object... params) throws DataAccessException {
+    public void executeUpdate(String statement, Object... params) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {                          //try with resources
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) { // get the prepared statement
                 for (var i = 0; i < params.length-1; i++) {

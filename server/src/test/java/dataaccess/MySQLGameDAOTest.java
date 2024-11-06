@@ -99,7 +99,7 @@ class MySQLGameDAOTest {
         GameDAO dataAccess = new MySQLGameDAO();
 
         dataAccess.createGame(new GameData(1, "white", "black", "gameName", new ChessGame()));
-        dataAccess.createGame(new GameData(1, "white", "black", "gameName2", new ChessGame()));
+//        dataAccess.createGame(new GameData(1, "white", "black", "gameName2", new ChessGame()));
 
         assertThrows(DataAccessException.class, () -> {
 //            dataAccess.createGame(new GameData(1, "white", "black", "gameName", new ChessGame()));

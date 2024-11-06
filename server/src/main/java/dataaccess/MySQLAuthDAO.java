@@ -5,6 +5,7 @@ import model.AuthData;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+//import MySQLUserDAO.*;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -36,6 +37,9 @@ public class MySQLAuthDAO implements AuthDAO{
                     var param = params[i];
                     if (param instanceof String p) {
                         ps.setString(i + 1, p); //set all the parameters
+                    }
+                    else if (param instanceof Integer p){
+                        ps.setInt(i + 1, p);
                     }
                 }
                 ps.executeUpdate();
