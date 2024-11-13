@@ -1,24 +1,21 @@
 package ui;
 
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 //import static EscapeSequences.*;
+import static java.lang.Math.abs;
 import static ui.EscapeSequences.*;
 
 public class ChessBoardPrint {
 
-    private static String[][] board = {
-            {WHITE_ROOK, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK},
-            {WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN, WHITE_PAWN},
-            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-            {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-            {BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN},
-            {BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK}
-    };
+//    private static ChessBoard realBoard = new ChessBoard();
 
     // Board dimensions.
     private static final int BOARD_SIZE_IN_SQUARES = 8;
@@ -33,56 +30,112 @@ public class ChessBoardPrint {
     private static Random rand = new Random();
 
 
-//    public static void main(String[] args) {
-//        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-//
-//        out.print(ERASE_SCREEN);
-//
-//        drawBoard(out);
-//
-//        drawTicTacToeBoard(out);
-//
-//        out.print(SET_BG_COLOR_BLACK);
-//        out.print(SET_TEXT_COLOR_WHITE);
-//    }
 
-    public static void drawHeaders(PrintStream out) {
+    public static void drawHeaders(PrintStream out,  int add) {
 
-        setBlack(out);
-
-        String[] headers = {" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "};
-        drawHeader(out, "   ");
+        String[] headers = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        out.print("   ");
         for (int boardCol = 0; boardCol < 8; ++boardCol) {
-            drawHeader(out, headers[boardCol]);
+            out.print(" " + headers[abs(boardCol + add)] + " ");
         }
+        out.print("   ");
 
+        out.print(SET_BG_COLOR_BLACK);
         out.println();
     }
 
-    public static void drawBoard(PrintStream out){
+    public static void drawBoard(PrintStream out, boolean reverse){
+//        boolean reverse = true;
+        int add = 0;
+        if (reverse == true){
+            add = -7;
+        }
 
-        String[] sideHeaders = {" a ", " b ", " c ", " d ", " e ", " f ", " g ", " h "};
-        drawHeaders(out);
+        String[] sideHeaders = {"8", "7", "6", "5", "4", "3", "2", "1"};
+
+        out.print(SET_BG_COLOR_LIGHT_GREY); // print the top headers
+        out.print(SET_TEXT_COLOR_BLACK);
+        drawHeaders(out, add);
+
         for (int j = 0; j < 8; j++) {
-            drawHeader(out, sideHeaders[j]);
+            out.print(SET_BG_COLOR_LIGHT_GREY); // print the left side headers
+            out.print(SET_TEXT_COLOR_BLACK);
+            out.print(" " + sideHeaders[abs(j + add)] + " ");
+
             for (int i = 0; i < 8; i++) {
                 if ((j+i)%2 == 0){
                     out.print(SET_BG_COLOR_WHITE);
                 }else{
                     out.print(SET_BG_COLOR_BLACK);
                 }
-                if (board[j][i].contains(BLACK_BISHOP)){
-                    out.print(SET_TEXT_COLOR_BLUE);
-                }else{
-                    String test = BLACK_BISHOP;
-                    out.print(SET_TEXT_COLOR_GREEN);
-                }
-                out.print(board[j][i]);
+                printPiece(out, abs(j + add), abs(i + add));
             }
-            drawHeader(out, sideHeaders[j]);
+
+            out.print(SET_BG_COLOR_LIGHT_GREY); // print the right side headers
+            out.print(SET_TEXT_COLOR_BLACK);
+            out.print(" " + sideHeaders[abs(j + add)] + " ");
+
+            out.print(SET_BG_COLOR_BLACK);
             out.println();
         }
-        drawHeaders(out);
+        out.print(SET_BG_COLOR_LIGHT_GREY); // print the bottom headers
+        drawHeaders(out, add);
+    }
+
+    private static void printPiece(PrintStream out, int row, int col){
+        ChessBoard realBoard = new ChessBoard();
+        realBoard.resetBoard();
+
+        var tempPiece = realBoard.getPiece(new ChessPosition(row+1, col+1));
+        if (tempPiece == null){
+            out.print(EMPTY);
+        }else {
+            if (tempPiece.getTeamColor() == ChessGame.TeamColor.WHITE){
+                out.print(SET_TEXT_COLOR_RED);
+            }else {
+                out.print(SET_TEXT_COLOR_YELLOW);
+            }
+
+            if (tempPiece.getPieceType() == ChessPiece.PieceType.ROOK) {
+                if (tempPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    out.print(WHITE_ROOK);
+                } else {
+                    out.print(BLACK_ROOK);
+                }
+            } else if (tempPiece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
+                if (tempPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    out.print(WHITE_KNIGHT);
+                } else {
+                    out.print(BLACK_KNIGHT);
+                }
+            }else if (tempPiece.getPieceType() == ChessPiece.PieceType.BISHOP) {
+                if (tempPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    out.print(WHITE_BISHOP);
+                } else {
+                    out.print(BLACK_BISHOP);
+                }
+            } else if (tempPiece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+                if (tempPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    out.print(WHITE_QUEEN);
+                } else {
+                    out.print(BLACK_QUEEN);
+                }
+            }else if (tempPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                if (tempPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    out.print(WHITE_KING);
+                } else {
+                    out.print(WHITE_KING);
+                }
+            }else if (tempPiece.getPieceType() == ChessPiece.PieceType.PAWN) {
+                if (tempPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    out.print(WHITE_PAWN);
+                } else {
+                    out.print(BLACK_PAWN);
+                }
+            }else{
+                out.print("aksfvpkadjbfgpviwubar");
+            }
+        }
     }
 
     private static void drawHeader(PrintStream out, String headerText) {
