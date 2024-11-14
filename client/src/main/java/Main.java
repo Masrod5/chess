@@ -21,7 +21,8 @@ public class Main {
             serverUrl = args[0];
         }
 
-        new ClientInput().doGet(serverUrl);
+        new Repl(serverUrl).run();
+//        new ClientInput().doGet(serverUrl);
 
 //        new ClientInput().doGet(serverUrl).run();
         

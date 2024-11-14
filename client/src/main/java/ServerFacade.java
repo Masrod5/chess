@@ -19,9 +19,14 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public UserDAO register(UserData user) throws DataAccessException {
+    public UserData register(UserData user) throws DataAccessException {
         var path = "/user";
-        return this.makeRequest("POST", path, user, UserDAO.class);
+        return this.makeRequest("POST", path, user, UserData.class);
+    }
+
+    public void logout() throws DataAccessException {
+        var path = "/session";
+        this.makeRequest("DELETE", path, null, null);
     }
 
 

@@ -22,12 +22,16 @@ public class PreGameMenu {
 
         return switch (command) {
             case "register" -> register(params);
+            case "logout" -> logout();
             default -> help();
         };
 
     }
 
-
+    public String logout() throws DataAccessException {
+        server.logout();
+        return "you logged out";
+    }
 
     public String register(String[] params) throws DataAccessException {
         if (params.length == 3) {
@@ -47,7 +51,7 @@ public class PreGameMenu {
     public String help() {
         return """
                 register <USERNAME> <PASSWORD> <EMAIL> - to create an account
-                login <USERNAME> <PASSWORD> - to play chess 
+                login <USERNAME> <PASSWORD> - to play chess
                 quit - playing chess
                 help - with possible commands
                 """;
