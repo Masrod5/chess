@@ -27,9 +27,18 @@ public class PreGameMenu {
             case "register" -> register(params);
             case "logout" -> logout();
             case "login" -> login(params);
+            case "list" -> listGames();
             default -> help();
         };
 
+    }
+
+    private String listGames() throws DataAccessException {
+        if (state == State.LOGIN){
+            server.listGames();
+        }else{
+            throw new DataAccessException("unauthorized");
+        }
     }
 
     public String login(String[] params) throws DataAccessException {

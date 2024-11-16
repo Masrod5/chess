@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.AuthData;
+import model.GameData;
 import model.LoginRequest;
 import model.UserData;
 
@@ -12,6 +13,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Map;
 
 public class ServerFacade {
@@ -42,7 +44,10 @@ public class ServerFacade {
         return test;
     }
 
-
+    public void listGames() throws DataAccessException{
+        var path = "/game";
+        this.makeRequest("GET", path, null, Collection<GameData>);
+    }
 
     public void logout() throws DataAccessException {
         var path = "/session";
@@ -119,4 +124,6 @@ public class ServerFacade {
     private boolean isSuccessful(int status) {
         return status / 100 == 2;
     }
+
+
 }
