@@ -42,6 +42,9 @@ public class Server {
         Spark.put("/game", this::joinGame);
         Spark.delete("/db", this::clear);
         Spark.exception(DataAccessException.class, this::failerResponse);
+        Spark.exception(Exception.class, (Exception e, Request req, Response res) -> {
+            System.out.println(e);
+        });
 
 
         Spark.awaitInitialization();

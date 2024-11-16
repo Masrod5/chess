@@ -1,6 +1,8 @@
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
+import model.AuthData;
+import model.LoginRequest;
 import model.UserData;
 
 import java.io.IOException;
@@ -10,23 +12,43 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Map;
 
 public class ServerFacade {
 
     private final String serverUrl;
+    private String authToken;
+    private String username;
+    private State state = State.LOGOUT;
 
     public ServerFacade(String url) {
         serverUrl = url;
     }
 
-    public UserData register(UserData user) throws DataAccessException {
+    public AuthData register(UserData user) throws DataAccessException {
         var path = "/user";
-        return this.makeRequest("POST", path, user, UserData.class);
+        state = State.LOGIN;
+        AuthData test = this.makeRequest("POST", path, user, AuthData.class);
+        authToken = test.authToken();
+//        username = test.username();
+        return test;
     }
+
+    public AuthData login(LoginRequest loginRequest) throws DataAccessException {
+        var path = "/session";
+        state = State.LOGIN;
+        AuthData test = this.makeRequest("POST", path, loginRequest, AuthData.class);
+        authToken = test.authToken();
+        return test;
+    }
+
+
 
     public void logout() throws DataAccessException {
         var path = "/session";
+        state = State.LOGOUT;
         this.makeRequest("DELETE", path, null, null);
+        authToken = null;
     }
 
 
@@ -37,7 +59,14 @@ public class ServerFacade {
             http.setRequestMethod(method);
             http.setDoOutput(true);
 
-            writeBody(request, http);
+            if (authToken != null){
+                writeHeaders(authToken, http);
+            }
+            if (request != null) {
+                writeBody(request, http);
+            }
+
+
             http.connect();
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
@@ -69,10 +98,21 @@ public class ServerFacade {
         }
     }
 
+    private void writeHeaders(Object request, HttpURLConnection http) throws IOException {
+        if (request != null) {
+            http.addRequestProperty("authorization", authToken);
+        }
+    }
+
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, DataAccessException {
         var status = http.getResponseCode();
         if (!isSuccessful(status)) {
-            throw new DataAccessException("failure: " + status);
+            String body = new String(http.getErrorStream().readAllBytes());
+            String message = body;
+            if (body.charAt(0) == '{') {
+                message = (String) new Gson().fromJson(body, Map.class).get("message");
+            }
+            throw new DataAccessException("failure: " + message);
         }
     }
 
