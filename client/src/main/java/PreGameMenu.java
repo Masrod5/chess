@@ -1,5 +1,5 @@
-import dataaccess.DataAccessException;
-import dataaccess.UserDAO;
+
+//import dataaccess.UserDAO;
 import model.AuthData;
 import model.LoginRequest;
 import model.UserData;
@@ -18,7 +18,7 @@ public class PreGameMenu {
         this.serverURL = serverURL;
     }
 
-    public String eval(String input) throws DataAccessException {
+    public String eval(String input) throws Exception{
         var tokens = input.toLowerCase().split(" ");
         var command = (tokens.length > 0) ? tokens[0] : "help";
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
@@ -28,20 +28,42 @@ public class PreGameMenu {
             case "logout" -> logout();
             case "login" -> login(params);
             case "list" -> listGames();
+            case "create" -> createGame(params);
+            case "quit" -> "quit";
             default -> help();
         };
 
     }
 
-    private String listGames() throws DataAccessException {
+//    private String quit() {
+//
+//    }
+
+    private String createGame(String[] params) throws Exception {
+        if (state == State.LOGOUT){
+            throw new Exception("you are not logged in");
+        }
+        if (params.length == 1) {
+            String name = params[0];
+
+            server.createGame(name);
+
+        }else{
+            throw new Exception("incorrect number of parameters");
+        }
+        return "created game: " + params[0];
+    }
+
+    private String listGames() throws Exception{
         if (state == State.LOGIN){
             server.listGames();
         }else{
-            throw new DataAccessException("unauthorized");
+            return "you are not logged in";
         }
+        return "";
     }
 
-    public String login(String[] params) throws DataAccessException {
+    public String login(String[] params) throws Exception{
         if (params.length == 2) {
 
             state = State.LOGIN;
@@ -52,17 +74,18 @@ public class PreGameMenu {
 
 
             return String.format("You logged in as %s.", username);
+        } else {
+            return "incorrect number of parameters";
         }
-        throw new DataAccessException("Expected: <yourname> <password> <email>");
     }
 
-    public String logout() throws DataAccessException {
+    public String logout() throws Exception{
         state = State.LOGOUT;
         server.logout();
         return "you logged out";
     }
 
-    public String register(String[] params) throws DataAccessException {
+    public String register(String[] params) throws Exception{
         if (params.length == 3) {
             state = State.LOGIN;
             String username = params[0];
@@ -74,7 +97,7 @@ public class PreGameMenu {
 
             return String.format("You registered as %s.", username);
         }
-        throw new DataAccessException("Expected: <yourname> <password> <email>");
+        return "incorrect number of parameters";
     }
 
     public String help() {

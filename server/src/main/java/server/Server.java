@@ -30,6 +30,14 @@ public class Server {
             throw new RuntimeException(e);
         }
 
+        try {
+            userDAO.clear();
+            authDAO.clear();
+            gameDAO.clear();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
 
         // Register your endpoints and handle exceptions here.
 
