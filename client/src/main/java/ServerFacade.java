@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static ui.ChessBoardPrint.drawBoard;
+
 public class ServerFacade {
 
     private final String serverUrl;
@@ -56,10 +58,17 @@ public class ServerFacade {
         var path = "/game";
         var i = this.makeRequest("GET", path, null, ListGames.class);
         for (GameData game : i.games()){
-            System.out.print("lala " + game.gameID() + " " + game.gameName());
+            System.out.print("Game " + game.gameID() + ": " + game.gameName() + " " + game.whiteUsername() + " " + game.blackUsername() );
             System.out.println();
         }
         return this.makeRequest("GET", path, null, ListGames.class);
+    }
+
+    public void joinGame(int gameID, String gameName) throws Exception {
+        var path = "/game";
+        JoinGameRequest joining = new JoinGameRequest(gameID, gameName);
+        GameData game = this.makeRequest("PUT", path, joining, null);
+        drawBoard(game.game().getBoard(), false);
     }
 
     public void logout() throws Exception {

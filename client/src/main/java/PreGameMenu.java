@@ -30,14 +30,23 @@ public class PreGameMenu {
             case "list" -> listGames();
             case "create" -> createGame(params);
             case "quit" -> "quit";
+            case "join" -> joinGame(params);
             default -> help();
         };
 
     }
 
-//    private String quit() {
-//
-//    }
+    private String joinGame(String[] params) throws Exception{
+        if (params.length == 2){
+            int gameID = Integer.parseInt(params[0]);
+            String color = params[1].toUpperCase();
+            server.joinGame(gameID, color);
+
+            return "joined game: " + gameID + " as " + color;
+        }else{
+            throw new Exception("incorrect number of parameters");
+        }
+    }
 
     private String createGame(String[] params) throws Exception {
         if (state == State.LOGOUT){

@@ -44,8 +44,9 @@ public class ChessBoardPrint {
         out.println();
     }
 
-    public static void drawBoard(PrintStream out, boolean reverse){
+    public static void drawBoard(ChessBoard board, boolean reverse){
 //        boolean reverse = true;
+        PrintStream out = null;
         int add = 0;
         if (reverse == true){
             add = -7;
@@ -68,7 +69,7 @@ public class ChessBoardPrint {
                 }else{
                     out.print(SET_BG_COLOR_BLACK);
                 }
-                printPiece(out, abs(j + add), abs(i + add));
+                printPiece(out, abs(j + add), abs(i + add), board);
             }
 
             out.print(SET_BG_COLOR_LIGHT_GREY); // print the right side headers
@@ -82,8 +83,8 @@ public class ChessBoardPrint {
         drawHeaders(out, add);
     }
 
-    private static void printPiece(PrintStream out, int row, int col){
-        ChessBoard realBoard = new ChessBoard();
+    private static void printPiece(PrintStream out, int row, int col, ChessBoard realBoard){
+//        ChessBoard realBoard = new ChessBoard();
         realBoard.resetBoard();
 
         var tempPiece = realBoard.getPiece(new ChessPosition(row+1, col+1));
