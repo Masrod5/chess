@@ -39,7 +39,7 @@ public class PreGameMenu {
         var command = (tokens.size() > 0) ? tokens.get(0) : "help";
 //        var params = Arrays.copyOfRange(tokens, 1, tokens.size());
 
-        var params = new ArrayList<>();
+        var params = new ArrayList<String>();
 
         for (int i = 1; i < tokens.size(); i++) {
             params.add(tokens.get(i));
@@ -49,31 +49,31 @@ public class PreGameMenu {
 
         return switch (command) {
             case "register" -> register(params);
-//            case "logout" -> logout();
-//            case "login" -> login(params);
-//            case "list" -> listGames();
-//            case "create" -> createGame(params);
-//            case "quit" -> "quit";
-//            case "join" -> joinGame(params);
-//            case "observe" -> observe(params);
+            case "logout" -> logout();
+            case "login" -> login(params);
+            case "list" -> listGames();
+            case "create" -> createGame(params);
+            case "quit" -> "quit";
+            case "join" -> joinGame(params);
+            case "observe" -> observe(params);
             default -> help();
         };
 
     }
 
-    private String observe(String[] params) throws Exception{
+    private String observe(ArrayList<String> params) throws Exception{
         if (state == State.LOGOUT){
             return "you must log in to observe a game";
         }
-        if (params.length == 2){
+        if (params.size() == 2){
             int gameID;
             try {
-                gameID = Integer.parseInt(params[0]);
+                gameID = Integer.parseInt(params.get(0));
 
             } catch (Exception e) {
                 return "game to observe must be a number";
             }
-            String color = params[1].toUpperCase();
+            String color = params.get(1).toUpperCase();
             if (!(color.equals("BLACK") || color.equals("WHITE"))){
                 return "team to observe must be typed \"black\" or \"white\"";
             }
@@ -94,13 +94,13 @@ public class PreGameMenu {
         }
     }
 
-    private String joinGame(String[] params) throws Exception{
+    private String joinGame(ArrayList<String> params) throws Exception{
         if (state == State.LOGOUT){
             return "you must log in to join a game";
         }
-        if (params.length == 2){
-            int gameID = Integer.parseInt(params[0]);
-            String color = params[1].toUpperCase();
+        if (params.size() == 2){
+            int gameID = Integer.parseInt(params.get(0));
+            String color = params.get(1).toUpperCase();
             if (!(color.equals("BLACK") || color.equals("WHITE"))){
                 return "team to join as must be typed \"black\" or \"white\"";
             }
@@ -129,19 +129,19 @@ public class PreGameMenu {
         }
     }
 
-    private String createGame(String[] params) throws Exception {
+    private String createGame(ArrayList<String> params) throws Exception {
         if (state == State.LOGOUT){
             return "you are not logged in";
         }
-        if (params.length == 1) {
-            String name = params[0];
+        if (params.size() == 1) {
+            String name = params.get(0);
 
             server.createGame(name);
 
         }else{
             return "incorrect number of parameters";
         }
-        return "created game: " + params[0];
+        return "created game: " + params.get(0);
     }
 
     private String listGames() throws Exception{
@@ -161,15 +161,15 @@ public class PreGameMenu {
         return "";
     }
 
-    public String login(String[] params) throws Exception{
+    public String login(ArrayList<String> params) throws Exception{
         if (state == State.LOGIN){
             return "you must logout before you can login again";
         }
-        if (params.length == 2) {
+        if (params.size() == 2) {
 
             state = State.LOGIN;
-            String username = params[0];
-            String password = params[1];
+            String username = params.get(0);
+            String password = params.get(1);
             UserData thing;
             try {
                 server.login(new LoginRequest(username, password));
@@ -193,17 +193,17 @@ public class PreGameMenu {
         return "you logged out";
     }
 
-    public String register(String[] params) throws Exception{
-        if (params.length == 3) {
+    public String register(ArrayList<String> params) throws Exception{
+        if (params.size() == 3) {
             state = State.LOGIN;
-            String username = params[0];
-            String password = params[1];
-            String email = params[2];
+            String username = params.get(0);
+            String password = params.get(1);
+            String email = params.get(2);
             UserData thing;
             try {
                 server.register(new UserData(username, password, email));
             }catch (Exception e){
-                return "already taken";
+                return "username already taken";
             }
 
 
