@@ -1,16 +1,12 @@
 
 //import dataaccess.UserDAO;
-import chess.ChessBoard;
+
 import chess.ChessGame;
-import model.AuthData;
 import model.GameData;
 import model.LoginRequest;
 import model.UserData;
-import spark.utils.Assert;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import static ui.ChessBoardPrint.drawBoard;
