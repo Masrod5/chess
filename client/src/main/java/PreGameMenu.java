@@ -53,12 +53,19 @@ public class PreGameMenu {
             case "login" -> login(params);
             case "list" -> listGames();
             case "create" -> createGame(params);
-            case "quit" -> "quit";
+            case "quit" -> quit(params);
             case "join" -> joinGame(params);
             case "observe" -> observe(params);
             default -> help();
         };
 
+    }
+
+    private String quit(ArrayList<String> params){
+        if (state == State.LOGIN){
+            return "you need to log out before you quit";
+        }
+        return "quit";
     }
 
     private String observe(ArrayList<String> params) throws Exception{
@@ -194,6 +201,9 @@ public class PreGameMenu {
     }
 
     public String register(ArrayList<String> params) throws Exception{
+        if (state == State.LOGIN){
+            return "you must log out before you register a new user";
+        }
         if (params.size() == 3) {
             state = State.LOGIN;
             String username = params.get(0);
