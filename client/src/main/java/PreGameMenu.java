@@ -155,7 +155,9 @@ public class PreGameMenu {
                 return "you have no games. try to create a game by typing \"create\" <game name>";
             }
             for (int i = 0; i < gameList.size(); i++){
-                System.out.print("Game: " + (i+1) + " Name=" + gameList.get(i).gameName() + " White=" + gameList.get(i).whiteUsername() + " Black=" + gameList.get(i).blackUsername());
+                String white = gameList.get(i).whiteUsername();
+                String black = gameList.get(i).blackUsername();
+                System.out.print("Game: " + (i+1) + " Name=" + gameList.get(i).gameName() + " White=" + white + " Black=" + black);
                 System.out.println();
             }
         }else{
