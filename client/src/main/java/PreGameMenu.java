@@ -6,6 +6,7 @@ import model.AuthData;
 import model.GameData;
 import model.LoginRequest;
 import model.UserData;
+import spark.utils.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,19 +28,34 @@ public class PreGameMenu {
     }
 
     public String eval(String input) throws Exception{
-        var tokens = input.toLowerCase().split(" ");
-        var command = (tokens.length > 0) ? tokens[0] : "help";
-        var params = Arrays.copyOfRange(tokens, 1, tokens.length);
+        var tokenstest = input.toLowerCase().split(" ");
+        ArrayList<String> tokens = new ArrayList<>();
+        for (String i : tokenstest) {
+            if (!i.isEmpty()) {
+                tokens.add(i);
+            }
+        }
+
+        var command = (tokens.size() > 0) ? tokens.get(0) : "help";
+//        var params = Arrays.copyOfRange(tokens, 1, tokens.size());
+
+        var params = new ArrayList<>();
+
+        for (int i = 1; i < tokens.size(); i++) {
+            params.add(tokens.get(i));
+        }
+
+
 
         return switch (command) {
             case "register" -> register(params);
-            case "logout" -> logout();
-            case "login" -> login(params);
-            case "list" -> listGames();
-            case "create" -> createGame(params);
-            case "quit" -> "quit";
-            case "join" -> joinGame(params);
-            case "observe" -> observe(params);
+//            case "logout" -> logout();
+//            case "login" -> login(params);
+//            case "list" -> listGames();
+//            case "create" -> createGame(params);
+//            case "quit" -> "quit";
+//            case "join" -> joinGame(params);
+//            case "observe" -> observe(params);
             default -> help();
         };
 
@@ -88,12 +104,19 @@ public class PreGameMenu {
             if (!(color.equals("BLACK") || color.equals("WHITE"))){
                 return "team to join as must be typed \"black\" or \"white\"";
             }
+            if (gameList == null){
+                return "you must run \"list\" before you can join a game";
+            }
             if (!(gameID > 0 && gameID <= gameList.size())){
                 return "try running \"list\" to see what games you can join";
             }else{
                 gameID = gameList.get(gameID-1).gameID();
             }
-            server.joinGame(gameID, color);
+            try {
+                server.joinGame(gameID, color);
+            } catch (Exception e) {
+                return "already taken";
+            }
             if (color.equals("WHITE")) {
                 drawBoard(new ChessGame().getBoard(), false);
             }else{
