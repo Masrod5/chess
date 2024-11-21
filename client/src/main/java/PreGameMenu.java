@@ -1,17 +1,25 @@
 
 //import dataaccess.UserDAO;
+import chess.ChessBoard;
+import chess.ChessGame;
 import model.AuthData;
+import model.GameData;
 import model.LoginRequest;
 import model.UserData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import static ui.ChessBoardPrint.drawBoard;
 
 public class PreGameMenu {
 
     private final ServerFacade server;
     private final String serverURL;
     private State state = State.LOGOUT;
+    private List<GameData> gameList = null;
 
     public PreGameMenu(String serverURL){
         server = new ServerFacade(serverURL);
@@ -31,26 +39,76 @@ public class PreGameMenu {
             case "create" -> createGame(params);
             case "quit" -> "quit";
             case "join" -> joinGame(params);
+            case "observe" -> observe(params);
             default -> help();
         };
 
     }
 
+    private String observe(String[] params) throws Exception{
+        if (state == State.LOGOUT){
+            return "you must log in to observe a game";
+        }
+        if (params.length == 2){
+            int gameID;
+            try {
+                gameID = Integer.parseInt(params[0]);
+
+            } catch (Exception e) {
+                return "game to observe must be a number";
+            }
+            String color = params[1].toUpperCase();
+            if (!(color.equals("BLACK") || color.equals("WHITE"))){
+                return "team to observe must be typed \"black\" or \"white\"";
+            }
+            if (!(gameID > 0 && gameID <= gameList.size())){
+                return "try running \"list\" to see what games you can observe";
+            }else{
+                gameID = gameList.get(gameID-1).gameID();
+            }
+            if (color.equals("WHITE")) {
+                drawBoard(new ChessGame().getBoard(), false);
+            }else{
+                drawBoard(new ChessGame().getBoard(), true);
+            }
+
+            return "observing game: " + gameID + " as " + color;
+        }else{
+            return "incorrect number of parameters";
+        }
+    }
+
     private String joinGame(String[] params) throws Exception{
+        if (state == State.LOGOUT){
+            return "you must log in to join a game";
+        }
         if (params.length == 2){
             int gameID = Integer.parseInt(params[0]);
             String color = params[1].toUpperCase();
+            if (!(color.equals("BLACK") || color.equals("WHITE"))){
+                return "team to join as must be typed \"black\" or \"white\"";
+            }
+            if (!(gameID > 0 && gameID <= gameList.size())){
+                return "try running \"list\" to see what games you can join";
+            }else{
+                gameID = gameList.get(gameID-1).gameID();
+            }
             server.joinGame(gameID, color);
+            if (color.equals("WHITE")) {
+                drawBoard(new ChessGame().getBoard(), false);
+            }else{
+                drawBoard(new ChessGame().getBoard(), true);
+            }
 
             return "joined game: " + gameID + " as " + color;
         }else{
-            throw new Exception("incorrect number of parameters");
+            return "incorrect number of parameters";
         }
     }
 
     private String createGame(String[] params) throws Exception {
         if (state == State.LOGOUT){
-            throw new Exception("you are not logged in");
+            return "you are not logged in";
         }
         if (params.length == 1) {
             String name = params[0];
@@ -58,14 +116,22 @@ public class PreGameMenu {
             server.createGame(name);
 
         }else{
-            throw new Exception("incorrect number of parameters");
+            return "incorrect number of parameters";
         }
         return "created game: " + params[0];
     }
 
     private String listGames() throws Exception{
         if (state == State.LOGIN){
-            server.listGames();
+            gameList = server.listGames().games();
+
+            if (gameList.isEmpty()){
+                return "you have no games. try to create a game by typing \"create\" <game name>";
+            }
+            for (int i = 0; i < gameList.size(); i++){
+                System.out.print("Game: " + (i+1) + " Name=" + gameList.get(i).gameName() + " White=" + gameList.get(i).whiteUsername() + " Black=" + gameList.get(i).blackUsername());
+                System.out.println();
+            }
         }else{
             return "you are not logged in";
         }
@@ -73,13 +139,20 @@ public class PreGameMenu {
     }
 
     public String login(String[] params) throws Exception{
+        if (state == State.LOGIN){
+            return "you must logout before you can login again";
+        }
         if (params.length == 2) {
 
             state = State.LOGIN;
             String username = params[0];
             String password = params[1];
             UserData thing;
-            server.login(new LoginRequest(username, password));
+            try {
+                server.login(new LoginRequest(username, password));
+            } catch (Exception e) {
+                return "incorrect username of password";
+            }
 
 
             return String.format("You logged in as %s.", username);
@@ -89,6 +162,9 @@ public class PreGameMenu {
     }
 
     public String logout() throws Exception{
+        if (state == State.LOGOUT){
+            return "you are already logged out";
+        }
         state = State.LOGOUT;
         server.logout();
         return "you logged out";
@@ -101,7 +177,11 @@ public class PreGameMenu {
             String password = params[1];
             String email = params[2];
             UserData thing;
-            server.register(new UserData(username, password, email));
+            try {
+                server.register(new UserData(username, password, email));
+            }catch (Exception e){
+                return "already taken";
+            }
 
 
             return String.format("You registered as %s.", username);

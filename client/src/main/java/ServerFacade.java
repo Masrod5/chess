@@ -1,3 +1,4 @@
+import chess.ChessBoard;
 import com.google.gson.Gson;
 
 import model.*;
@@ -56,19 +57,18 @@ public class ServerFacade {
 
     public ListGames listGames() throws Exception{
         var path = "/game";
-        var i = this.makeRequest("GET", path, null, ListGames.class);
-        for (GameData game : i.games()){
-            System.out.print("Game " + game.gameID() + ": " + game.gameName() + " " + game.whiteUsername() + " " + game.blackUsername() );
-            System.out.println();
-        }
+//        var i = this.makeRequest("GET", path, null, ListGames.class);
+//        for (GameData game : i.games()){
+//            System.out.print("Game " + game.gameID() + ": " + game.gameName() + " " + game.whiteUsername() + " " + game.blackUsername() );
+//            System.out.println();
+//        }
         return this.makeRequest("GET", path, null, ListGames.class);
     }
 
     public void joinGame(int gameID, String gameName) throws Exception {
         var path = "/game";
         JoinGameRequest joining = new JoinGameRequest(gameID, gameName);
-        GameData game = this.makeRequest("PUT", path, joining, null);
-        drawBoard(game.game().getBoard(), false);
+        this.makeRequest("PUT", path, joining, null);
     }
 
     public void logout() throws Exception {

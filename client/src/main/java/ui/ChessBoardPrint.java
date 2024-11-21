@@ -46,7 +46,7 @@ public class ChessBoardPrint {
 
     public static void drawBoard(ChessBoard board, boolean reverse){
 //        boolean reverse = true;
-        PrintStream out = null;
+        PrintStream out = System.out;
         int add = 0;
         if (reverse == true){
             add = -7;
@@ -81,6 +81,8 @@ public class ChessBoardPrint {
         }
         out.print(SET_BG_COLOR_LIGHT_GREY); // print the bottom headers
         drawHeaders(out, add);
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
     }
 
     private static void printPiece(PrintStream out, int row, int col, ChessBoard realBoard){
