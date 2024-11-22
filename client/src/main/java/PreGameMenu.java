@@ -5,6 +5,8 @@ import chess.ChessGame;
 import model.GameData;
 import model.LoginRequest;
 import model.UserData;
+import serverFacade.ServerFacade;
+import serverFacade.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ public class PreGameMenu {
     private final ServerFacade server;
     private final String serverURL;
     private State state = State.LOGOUT;
-    private List<GameData> gameList = null;
+    public List<GameData> gameList = null;
 
     public PreGameMenu(String serverURL){
         server = new ServerFacade(serverURL);

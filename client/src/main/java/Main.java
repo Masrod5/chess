@@ -19,18 +19,6 @@ public class Main {
         }
 
         new Repl(serverUrl).run();
-//        new ClientInput().doGet(serverUrl);
-
-//        new ClientInput().doGet(serverUrl).run();
-        
-
-//        out.print(ERASE_SCREEN);
-
-
-
-
-//        drawBoard(out, true);
-//        drawBoard(out, false);
 
     }
 }

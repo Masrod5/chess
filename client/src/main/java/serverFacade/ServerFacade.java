@@ -1,4 +1,5 @@
-import chess.ChessBoard;
+package serverFacade;
+
 import com.google.gson.Gson;
 
 import model.*;
@@ -10,12 +11,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-
-import static ui.ChessBoardPrint.drawBoard;
 
 public class ServerFacade {
 
