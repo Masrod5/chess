@@ -180,7 +180,7 @@ public class PreGameMenu {
         }
         if (params.size() == 2) {
 
-            state = State.LOGIN;
+
             String username = params.get(0);
             String password = params.get(1);
             UserData thing;
@@ -189,6 +189,7 @@ public class PreGameMenu {
             } catch (Exception e) {
                 return "incorrect username of password";
             }
+            state = State.LOGIN;
 
 
             return String.format("You logged in as %s.", username);
@@ -211,7 +212,7 @@ public class PreGameMenu {
             return "you must log out before you register a new user";
         }
         if (params.size() == 3) {
-            state = State.LOGIN;
+
             String username = params.get(0);
             String password = params.get(1);
             String email = params.get(2);
@@ -221,6 +222,7 @@ public class PreGameMenu {
             }catch (Exception e){
                 return "username already taken";
             }
+            state = State.LOGIN;
 
 
             return String.format("You registered as %s.", username);

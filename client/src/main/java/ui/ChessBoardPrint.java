@@ -51,7 +51,7 @@ public class ChessBoardPrint {
                 if ((j+i)%2 == 0){
                     out.print(SET_BG_COLOR_BLUE);
                 }else{
-                    out.print(SET_BG_COLOR_LIGHT_GREY);
+                    out.print(SET_BG_COLOR_DARK_GREY);
                 }
                 printPiece(out, abs(j + add), abs(i + add), board);
             }
