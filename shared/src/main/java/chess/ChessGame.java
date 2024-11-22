@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 import static chess.ChessPiece.PieceType.KING;
@@ -13,6 +14,18 @@ import static chess.ChessPiece.PieceType.KING;
  * signature of the existing methods.
  */
 public class ChessGame {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessGame chessGame = (ChessGame) o;
+        return whoseTurn == chessGame.whoseTurn && Objects.equals(board, chessGame.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(whoseTurn, board);
+    }
 
     private TeamColor whoseTurn = TeamColor.WHITE;
     private ChessBoard board = new ChessBoard();
