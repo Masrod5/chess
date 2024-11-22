@@ -63,9 +63,9 @@ public class ServerFacade {
 
     }
 
-    public void joinGame(int gameID, String gameName) throws Exception {
+    public void joinGame(int gameID, String color) throws Exception {
         var path = "/game";
-        JoinGameRequest joining = new JoinGameRequest(gameID, gameName);
+        JoinGameRequest joining = new JoinGameRequest(gameID, color);
         this.makeRequest("PUT", path, joining, null);
     }
 

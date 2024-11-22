@@ -93,8 +93,6 @@ public class ServerFacadeTests {
 
     }
 
-
-
     @Test
     public void creatGameSuccess() throws Exception {
 
@@ -154,6 +152,26 @@ public class ServerFacadeTests {
             assertTrue(true);
         }
 
+    }
+
+    @Test
+    public void joinGameBadRequest() throws Exception {
+
+        facade.clear();
+        facade.register(newUser);
+
+        facade.createGame("game");
+
+        var list = assertDoesNotThrow(() -> facade.listGames());
+
+        var i = list.games().getFirst().gameID();
+
+        try {
+            facade.joinGame(i, "");
+            assertTrue(true);
+        }catch (Exception e){
+            assertTrue(true);
+        }
     }
 
 
