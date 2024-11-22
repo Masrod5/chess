@@ -1,4 +1,4 @@
-package serverFacade;
+package serverfacade;
 
 import com.google.gson.Gson;
 
@@ -55,6 +55,12 @@ public class ServerFacade {
         var path = "/game";
 
         return this.makeRequest("GET", path, null, ListGames.class);
+    }
+
+    public void clear() throws Exception {
+        var path = "/db";
+        this.makeRequest("DELETE", path, null, null);
+
     }
 
     public void joinGame(int gameID, String gameName) throws Exception {

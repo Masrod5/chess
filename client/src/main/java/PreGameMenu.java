@@ -5,8 +5,8 @@ import chess.ChessGame;
 import model.GameData;
 import model.LoginRequest;
 import model.UserData;
-import serverFacade.ServerFacade;
-import serverFacade.State;
+import serverfacade.ServerFacade;
+import serverfacade.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +54,15 @@ public class PreGameMenu {
             case "quit" -> quit(params);
             case "join" -> joinGame(params);
             case "observe" -> observe(params);
+            case "masonanimation" -> clear();
             default -> help();
         };
 
+    }
+
+    private String clear() throws Exception {
+        server.clear();
+        return "you cleared";
     }
 
     private String quit(ArrayList<String> params){

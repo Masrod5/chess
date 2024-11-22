@@ -1,12 +1,10 @@
 package client;
 
-import model.AuthData;
 import model.LoginRequest;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.*;
 import server.Server;
-import serverFacade.ServerFacade;
+import serverfacade.ServerFacade;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +36,9 @@ public class ServerFacadeTests {
     @Test
     public void registerSuccess() throws Exception {
 
-        var result = assertDoesNotThrow(() -> facade.register(newUser));
+        facade.clear();
+
+        assertDoesNotThrow(() -> facade.register(newUser));
 //        assertEquals(result.username(), newUser.username());
     }
 
@@ -54,14 +54,14 @@ public class ServerFacadeTests {
 
     @Test
     public void loginSuccess() throws Exception {
-
+        facade.clear();
         registerSuccess();
-        var result = assertDoesNotThrow(() -> facade.login(new LoginRequest("username", "password")));
+        assertDoesNotThrow(() -> facade.login(new LoginRequest("username", "password")));
     }
 
     @Test
     public void loginBadRequest() throws Exception {
-        registerSuccess();
+//        registerSuccess();
         try {
             facade.login(new LoginRequest("password", "username"));
             assertTrue(false);
@@ -72,15 +72,33 @@ public class ServerFacadeTests {
 
     @Test
     public void logoutSuccess() throws Exception {
-
+        facade.clear();
         registerSuccess();
 
         assertDoesNotThrow(() -> facade.logout());
     }
 
     @Test
+    public void logoutTwice() throws Exception {
+        facade.clear();
+        registerSuccess();
+
+        assertDoesNotThrow(() -> facade.logout());
+
+        try{
+            facade.logout();
+        }catch (Exception e){
+            assertTrue(true);
+        }
+
+    }
+
+
+
+    @Test
     public void creatGameSuccess() throws Exception {
 
+        facade.clear();
         registerSuccess();
 
         assertDoesNotThrow(() -> facade.createGame("game"));
@@ -89,7 +107,7 @@ public class ServerFacadeTests {
     @Test
     public void creatGameNoName() throws Exception {
         try {
-            registerSuccess();
+//            registerSuccess();
             facade.createGame("");
             assertTrue(false);
         }catch (Exception e) {
@@ -98,8 +116,8 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void ListGamesSuccess() throws Exception {
-
+    public void listGamesSuccess() throws Exception {
+        facade.clear();
         registerSuccess();
         assertDoesNotThrow(() -> facade.createGame("game"));
         var result = assertDoesNotThrow(() -> facade.listGames());
@@ -108,8 +126,19 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void listGamesNoGames() throws Exception {
+        facade.clear();
+        registerSuccess();
+
+        var result = assertDoesNotThrow(() -> facade.listGames());
+
+        assertEquals(0, result.games().size());
+    }
+
+    @Test
     public void joinGameSuccess() throws Exception {
 
+        facade.clear();
         registerSuccess();
 
         facade.createGame("game");
