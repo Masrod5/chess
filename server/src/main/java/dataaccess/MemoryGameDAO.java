@@ -13,8 +13,9 @@ public class MemoryGameDAO implements GameDAO {
         games.clear();
     }
 
-    public void createGame(GameData game) {
+    public int createGame(GameData game) {
         games.add(game);
+        return game.gameID();
     }
 
     public GameData getGame(int id) {

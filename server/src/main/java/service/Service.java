@@ -69,9 +69,10 @@ public class Service {
             throw new DataAccessException("unauthorized");
         }
 
-        gameDAO.createGame(new GameData(gameID, null, null, game.gameName(), new ChessGame()));
 
-        return new GameData(gameID, null, null, null, null);
+        int id = gameDAO.createGame(new GameData(gameID, null, null, game.gameName(), new ChessGame()));
+
+        return new GameData(id, null, null, null, null);
     }
 
     public ListGames listGames(String authToken) throws DataAccessException {

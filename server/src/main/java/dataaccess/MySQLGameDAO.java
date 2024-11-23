@@ -18,6 +18,8 @@ import static java.sql.Types.NULL;
 
 public class MySQLGameDAO implements GameDAO{
 
+    private static int ID;
+
     public MySQLGameDAO() throws DataAccessException {
         configureDatabase();
     }
@@ -46,6 +48,12 @@ public class MySQLGameDAO implements GameDAO{
 
                 }
                 ps.executeUpdate();
+
+                var resultSet = ps.getGeneratedKeys();
+//                var ID = 0;
+                if (resultSet.next()) {
+                    ID = resultSet.getInt(1);
+                }
 
             }
         } catch (SQLException e) {
@@ -89,11 +97,12 @@ public class MySQLGameDAO implements GameDAO{
     }
 
     @Override
-    public void createGame(GameData game) throws DataAccessException {
-        var statement = "INSERT INTO GAME (gameID, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
+    public int createGame(GameData game) throws DataAccessException {
+        var statement = "INSERT INTO GAME (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
         var gameJson = new Gson().toJson(game.game());
         var json = new Gson().toJson(game);
-        executeUpdate(statement, game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), gameJson);
+        executeUpdate(statement, game.whiteUsername(), game.blackUsername(), game.gameName(), gameJson);
+        return ID;
     }
 
     @Override
