@@ -2,15 +2,11 @@ package dataaccess;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
-import model.AuthData;
 import model.GameData;
 
-import java.lang.reflect.GenericArrayType;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -18,7 +14,7 @@ import static java.sql.Types.NULL;
 
 public class MySQLGameDAO implements GameDAO{
 
-    private static int ID;
+    private static int id;
 
     public MySQLGameDAO() throws DataAccessException {
         configureDatabase();
@@ -52,7 +48,7 @@ public class MySQLGameDAO implements GameDAO{
                 var resultSet = ps.getGeneratedKeys();
 //                var ID = 0;
                 if (resultSet.next()) {
-                    ID = resultSet.getInt(1);
+                    id = resultSet.getInt(1);
                 }
 
             }
@@ -102,7 +98,7 @@ public class MySQLGameDAO implements GameDAO{
         var gameJson = new Gson().toJson(game.game());
         var json = new Gson().toJson(game);
         executeUpdate(statement, game.whiteUsername(), game.blackUsername(), game.gameName(), gameJson);
-        return ID;
+        return id;
     }
 
     @Override
