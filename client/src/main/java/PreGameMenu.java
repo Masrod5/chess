@@ -76,7 +76,7 @@ public class PreGameMenu {
         if (state == State.LOGOUT){
             return "you must log in to observe a game";
         }
-        if (params.size() == 2){
+        if (params.size() == 1){
             int gameID;
             try {
                 gameID = Integer.parseInt(params.get(0));
@@ -84,22 +84,25 @@ public class PreGameMenu {
             } catch (Exception e) {
                 return "game to observe must be a number";
             }
-            String color = params.get(1).toUpperCase();
-            if (!(color.equals("BLACK") || color.equals("WHITE"))){
-                return "team to observe must be typed \"black\" or \"white\"";
+//            String color = params.get(1).toUpperCase();
+//            if (!(color.equals("BLACK") || color.equals("WHITE"))){
+//                return "team to observe must be typed \"black\" or \"white\"";
+//            }
+            if (gameList == null){
+                return "you must run \"list\" before you can observe a game";
             }
             if (!(gameID > 0 && gameID <= gameList.size())){
                 return "try running \"list\" to see what games you can observe";
             }else{
                 gameID = gameList.get(gameID-1).gameID();
             }
-            if (color.equals("WHITE")) {
-                drawBoard(new ChessGame().getBoard(), false);
-            }else{
-                drawBoard(new ChessGame().getBoard(), true);
-            }
+//            if (color.equals("WHITE")) {
+            drawBoard(new ChessGame().getBoard(), false);
+//            }else{
+//                drawBoard(new ChessGame().getBoard(), true);
+//            }
 
-            return "observing game: " + gameID + " as " + color;
+            return "observing game: " + gameID;
         }else{
             return "incorrect number of parameters";
         }
