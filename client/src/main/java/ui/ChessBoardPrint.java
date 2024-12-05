@@ -49,25 +49,36 @@ public class ChessBoardPrint {
             for (int i = 0; i < 8; i++) {
 
                 boolean green = false;
+                boolean yellow = false;
 
                 if (highlight != null) {
-                    Object test = new Object[]{j, i};
-                    for (Object thing : highlight) {
-                        if (to == ) {
+                    for (ChessMove thing : highlight) {
+
+                        if (abs(thing.getEndPosition().getRow()-1+add) == j && abs(thing.getEndPosition().getColumn()-1+add) == i) {
+                            int ha = thing.getEndPosition().getRow();
                             green = true;
+                            if (abs(thing.getStartPosition().getRow()-1+add) == j && abs(thing.getStartPosition().getColumn()-1+add) == i) {
+                                yellow = true;
+                            }
                             break;
                         }
                     }
                 }
 
+
+                boolean light = false;
                 if ((j+i)%2 == 0){
-                    if (green == true){
+                    if (yellow == true) {
+                        out.print(SET_BG_COLOR_WHITE);
+                    } else if (green == true){
                         out.print(SET_BG_COLOR_GREEN);
                     }else {
                         out.print(SET_BG_COLOR_BLUE);
                     }
                 }else{
-                    if (green == true){
+                    if (yellow == true) {
+                        out.print(SET_BG_COLOR_WHITE);
+                    } else if (green == true){
                         out.print(SET_BG_COLOR_DARK_GREEN);
                     }else {
                         out.print(SET_BG_COLOR_DARK_GREY);
@@ -91,6 +102,10 @@ public class ChessBoardPrint {
 
     private static void printPiece(PrintStream out, int row, int col, ChessBoard realBoard){
         realBoard.resetBoard();
+
+
+
+
 
         var tempPiece = realBoard.getPiece(new ChessPosition(row+1, col+1));
         if (tempPiece == null){
@@ -141,6 +156,7 @@ public class ChessBoardPrint {
             }else{
                 out.print("aksfvpkadjbfgpviwubar");
             }
+            out.print(SET_BG_COLOR_BLACK);
         }
     }
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static java.lang.Math.abs;
 import static ui.ChessBoardPrint.drawBoard;
 
 public class PreGameMenu {
@@ -55,7 +56,8 @@ public class PreGameMenu {
             case "quit" -> quit(params);
             case "join" -> joinGame(params);
             case "observe" -> observe(params);
-            case "highlight" -> highlight(params);
+            case "h", "highlight" -> highlight(params);
+            case "redraw" -> redraw();
             case "masonanimation" -> clear();
             default -> help();
         };
@@ -247,14 +249,14 @@ public class PreGameMenu {
             case "g" -> 7;
             case "h" -> 8;
 
-            case "1" -> 1;
-            case "2" -> 2;
-            case "3" -> 3;
-            case "4" -> 4;
-            case "5" -> 5;
-            case "6" -> 6;
-            case "7" -> 7;
-            case "8" -> 8;
+            case "1" -> 8;
+            case "2" -> 7;
+            case "3" -> 6;
+            case "4" -> 5;
+            case "5" -> 4;
+            case "6" -> 3;
+            case "7" -> 2;
+            case "8" -> 1;
 
             default -> 10;
         };
@@ -268,16 +270,19 @@ public class PreGameMenu {
                 ChessBoard board = new ChessBoard();
                 board.resetBoard();
 
-                ChessPosition start = new ChessPosition(StringToNumber(test[0]), StringToNumber(test[1]));
+                ChessPosition start = new ChessPosition(StringToNumber(test[1]), StringToNumber(test[0]));
                 Collection<ChessMove> possible = board.getPiece(start).pieceMoves(board, start);
 
                 ArrayList<ChessMove> newist = new ArrayList<>();
-                for (int i = 0; i < possible.size(); i++){
-                    newist.add(new ChessMove(start, start, null));
-                }
+                newist.add(new ChessMove(start, start, null));
+                newist.addAll(possible);
+//                for (int i = 0; i < possible.size(); i++){
+//                    newist.add(new ChessMove(start, start, null));
+//                }
                 possible.add(new ChessMove(start, start, null));
                 Object[] highlight = possible.toArray();
                 drawBoard(board, false, newist);
+                drawBoard(board, true, newist);
             }else{
                 return "need to add message";
             }
@@ -285,6 +290,10 @@ public class PreGameMenu {
             return "you must have joined or be observing a game to run this command";
         }
         return "didn't work";
+    }
+
+    public String redraw(){
+        drawBoard();
     }
 
     public String help() {
