@@ -1,7 +1,7 @@
 
 //import dataaccess.UserDAO;
 
-import chess.ChessGame;
+import chess.*;
 import model.GameData;
 import model.LoginRequest;
 import model.UserData;
@@ -9,6 +9,7 @@ import serverfacade.ServerFacade;
 import serverfacade.State;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static ui.ChessBoardPrint.drawBoard;
@@ -54,6 +55,7 @@ public class PreGameMenu {
             case "quit" -> quit(params);
             case "join" -> joinGame(params);
             case "observe" -> observe(params);
+            case "highlight" -> highlight(params);
             case "masonanimation" -> clear();
             default -> help();
         };
@@ -97,7 +99,7 @@ public class PreGameMenu {
                 gameID = gameList.get(gameID-1).gameID();
             }
 //            if (color.equals("WHITE")) {
-            drawBoard(new ChessGame().getBoard(), false);
+            drawBoard(new ChessGame().getBoard(), false, null);
 //            }else{
 //                drawBoard(new ChessGame().getBoard(), true);
 //            }
@@ -132,11 +134,12 @@ public class PreGameMenu {
                 return "already taken";
             }
             if (color.equals("WHITE")) {
-                drawBoard(new ChessGame().getBoard(), false);
+                drawBoard(new ChessGame().getBoard(), false, null);
             }else{
-                drawBoard(new ChessGame().getBoard(), true);
+                drawBoard(new ChessGame().getBoard(), true, null);
             }
 
+            state = State.JOINED;
             return "joined game: " + gameID + " as " + color;
         }else{
             return "incorrect number of parameters";
@@ -233,6 +236,57 @@ public class PreGameMenu {
         return "incorrect number of parameters";
     }
 
+    private int StringToNumber(String letter){
+        return switch (letter){
+            case "a" -> 1;
+            case "b" -> 2;
+            case "c" -> 3;
+            case "d" -> 4;
+            case "e" -> 5;
+            case "f" -> 6;
+            case "g" -> 7;
+            case "h" -> 8;
+
+            case "1" -> 1;
+            case "2" -> 2;
+            case "3" -> 3;
+            case "4" -> 4;
+            case "5" -> 5;
+            case "6" -> 6;
+            case "7" -> 7;
+            case "8" -> 8;
+
+            default -> 10;
+        };
+    }
+
+    public String highlight(ArrayList<String> params){
+        if (state == State.JOINED){
+            if (params.size() == 1){
+                String move = params.get(0);
+                String[] test = move.split("");
+                ChessBoard board = new ChessBoard();
+                board.resetBoard();
+
+                ChessPosition start = new ChessPosition(StringToNumber(test[0]), StringToNumber(test[1]));
+                Collection<ChessMove> possible = board.getPiece(start).pieceMoves(board, start);
+
+                ArrayList<ChessMove> newist = new ArrayList<>();
+                for (int i = 0; i < possible.size(); i++){
+                    newist.add(new ChessMove(start, start, null));
+                }
+                possible.add(new ChessMove(start, start, null));
+                Object[] highlight = possible.toArray();
+                drawBoard(board, false, newist);
+            }else{
+                return "need to add message";
+            }
+        }else{
+            return "you must have joined or be observing a game to run this command";
+        }
+        return "didn't work";
+    }
+
     public String help() {
         if (state == State.LOGOUT) {
             return """
@@ -241,7 +295,16 @@ public class PreGameMenu {
                     quit - playing chess
                     help - with possible commands
                     """;
-        }else {
+        }else if (state == State.JOINED){
+            return """
+                    help - possible commands
+                    Redraw - redraw the chess board
+                    leave - leave the current game
+                    move <Start Posistion><End Position> - make a move
+                    resign - you forfeit the game
+                    highlight <Piece Position> - highlight a piece possible moves
+                    """;
+        } else {
             return """
                     create <NAME> - a game
                     list - games

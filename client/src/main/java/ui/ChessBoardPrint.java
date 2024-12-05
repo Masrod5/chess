@@ -1,13 +1,12 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 import javax.swing.plaf.basic.BasicLabelUI;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Random;
 
 //import static EscapeSequences.*;
@@ -29,7 +28,7 @@ public class ChessBoardPrint {
         out.println();
     }
 
-    public static void drawBoard(ChessBoard board, boolean reverse){
+    public static void drawBoard(ChessBoard board, boolean reverse, ArrayList<ChessMove> highlight){
         PrintStream out = System.out;
         int add = 0;
         if (reverse == true){
@@ -48,10 +47,31 @@ public class ChessBoardPrint {
             out.print(" " + sideHeaders[abs(j + add)] + " ");
 
             for (int i = 0; i < 8; i++) {
+
+                boolean green = false;
+
+                if (highlight != null) {
+                    Object test = new Object[]{j, i};
+                    for (Object thing : highlight) {
+                        if (to == ) {
+                            green = true;
+                            break;
+                        }
+                    }
+                }
+
                 if ((j+i)%2 == 0){
-                    out.print(SET_BG_COLOR_BLUE);
+                    if (green == true){
+                        out.print(SET_BG_COLOR_GREEN);
+                    }else {
+                        out.print(SET_BG_COLOR_BLUE);
+                    }
                 }else{
-                    out.print(SET_BG_COLOR_DARK_GREY);
+                    if (green == true){
+                        out.print(SET_BG_COLOR_DARK_GREEN);
+                    }else {
+                        out.print(SET_BG_COLOR_DARK_GREY);
+                    }
                 }
                 printPiece(out, abs(j + add), abs(i + add), board);
             }
