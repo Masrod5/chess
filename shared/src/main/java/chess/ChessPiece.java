@@ -1,6 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -50,9 +52,9 @@ public class ChessPiece {
 
     @Override
     public String toString() {
-        return "ChessPiece{" +
-                "Color=" + pieceColor +
-                ", type=" + type +
+        return  "{" +
+                 pieceColor +
+                ", " + type +
                 '}';
     }
 
@@ -78,6 +80,14 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> moves = new ArrayList<>();
+        PieceType pieceType = board.getPiece(new ChessPosition(myPosition.getRow(), myPosition.getColumn())).getPieceType();
+
+        if (pieceType == PieceType.ROOK){
+
+        }
+
+
+        return null;
     }
 }
