@@ -82,6 +82,9 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        int i = 0;
+        i++;
+
         Collection<ChessMove> moves = new ArrayList<>();
         PieceType pieceType = board.getPiece(new ChessPosition(myPosition.getRow(), myPosition.getColumn())).getPieceType();
 
@@ -89,19 +92,10 @@ public class ChessPiece {
         int myCol = myPosition.getColumn();
         int curRow = myRow;
         int curCol = myCol;
-        PieceType myType = board.getPiece(myPosition).getPieceType();
+//        PieceType myType = board.getPiece(myPosition).getPieceType();
 
         if (pieceType == PieceType.ROOK){
-            curRow++;
-            if (curRow < 0 || curRow > 7){
-
-            }else if (board.getPiece(new ChessPosition(curRow, curCol)) == null){
-                moves.add(new ChessMove(myPosition, new ChessPosition(curRow, curCol), null));
-            }else{
-                if (board.getPiece(new ChessPosition(curRow, curCol)).getPieceType() != myType) {
-                    moves.add(new ChessMove(myPosition, new ChessPosition(curRow, curCol), null));
-                }
-            }
+            moves.addAll(addMoves(board, myPosition, 1, 0));
 
         }
 
@@ -109,20 +103,24 @@ public class ChessPiece {
         return moves;
     }
 
-    public Collection<ChessMove> addMoves(ChessBoard board, Collection<ChessMove> moves, ChessPosition myPosition, int rowChange, int colChange){
+    public Collection<ChessMove> addMoves(ChessBoard board, ChessPosition myPosition, int rowChange, int colChange){
+        Collection<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        PieceType myType = board.getPiece(myPosition).getPieceType();
+        ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
 
-        while (row < 8 && row >= 0 && col < 8 && col >= 0){
+        while (row <= 8 && row > 0 && col <= 8 && col > 0){
             row += rowChange;
             col += colChange;
+            if (row > 8 || col > 8 || row < 0 || col  < 0){
+                break;
+            }
 
             ChessPosition endPosition = new ChessPosition(row, col);
 
             if (board.getPiece(endPosition) == null){
                 moves.add(new ChessMove(myPosition, endPosition, null));
-            }else if (board.getPiece(endPosition).getPieceType() != myType){
+            }else if (board.getPiece(endPosition).getTeamColor() != myColor){
                 moves.add(new ChessMove(myPosition, endPosition, null));
             }else{
                 break;
