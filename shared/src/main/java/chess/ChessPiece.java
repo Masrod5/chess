@@ -108,6 +108,32 @@ public class ChessPiece {
 
         return moves;
     }
+
+    public Collection<ChessMove> addMoves(ChessBoard board, Collection<ChessMove> moves, ChessPosition myPosition, int rowChange, int colChange){
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        PieceType myType = board.getPiece(myPosition).getPieceType();
+
+        while (row < 8 && row >= 0 && col < 8 && col >= 0){
+            row += rowChange;
+            col += colChange;
+
+            ChessPosition endPosition = new ChessPosition(row, col);
+
+            if (board.getPiece(endPosition) == null){
+                moves.add(new ChessMove(myPosition, endPosition, null));
+            }else if (board.getPiece(endPosition).getPieceType() != myType){
+                moves.add(new ChessMove(myPosition, endPosition, null));
+            }else{
+                break;
+            }
+        }
+
+
+
+        return moves;
+    }
+
+
+
 }
-
-
