@@ -1,5 +1,7 @@
 package chess;
 
+import jdk.jshell.Snippet;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -83,11 +85,29 @@ public class ChessPiece {
         Collection<ChessMove> moves = new ArrayList<>();
         PieceType pieceType = board.getPiece(new ChessPosition(myPosition.getRow(), myPosition.getColumn())).getPieceType();
 
+        int myRow = myPosition.getRow();
+        int myCol = myPosition.getColumn();
+        int curRow = myRow;
+        int curCol = myCol;
+        PieceType myType = board.getPiece(myPosition).getPieceType();
+
         if (pieceType == PieceType.ROOK){
+            curRow++;
+            if (curRow < 0 || curRow > 7){
+
+            }else if (board.getPiece(new ChessPosition(curRow, curCol)) == null){
+                moves.add(new ChessMove(myPosition, new ChessPosition(curRow, curCol), null));
+            }else{
+                if (board.getPiece(new ChessPosition(curRow, curCol)).getPieceType() != myType) {
+                    moves.add(new ChessMove(myPosition, new ChessPosition(curRow, curCol), null));
+                }
+            }
 
         }
 
 
-        return null;
+        return moves;
     }
 }
+
+
