@@ -223,7 +223,9 @@ public class ChessPiece {
         Collection<ChessMove> moves = new ArrayList<>();
         ChessGame.TeamColor myColor = board.getPiece(startPosition).getTeamColor();
 
-        if ((endPosition.getRow() == 8 && myColor == ChessGame.TeamColor.WHITE) || (endPosition.getRow() == 1 && myColor == ChessGame.TeamColor.BLACK)){
+        if      ((endPosition.getRow() == 8 && myColor == ChessGame.TeamColor.WHITE) ||
+                (endPosition.getRow() == 1 && myColor == ChessGame.TeamColor.BLACK)){
+
             moves.add(new ChessMove(startPosition, endPosition, PieceType.ROOK));
             moves.add(new ChessMove(startPosition, endPosition, PieceType.KNIGHT));
             moves.add(new ChessMove(startPosition, endPosition, PieceType.BISHOP));
