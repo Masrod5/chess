@@ -88,9 +88,7 @@ public class ChessPiece {
 
         int myRow = myPosition.getRow();
         int myCol = myPosition.getColumn();
-        int curRow = myRow;
-        int curCol = myCol;
-//        PieceType myType = board.getPiece(myPosition).getPieceType();
+
 
         if (pieceType == PieceType.ROOK){
             moves.addAll(addMoves(board, myPosition, 1, 0));
@@ -146,28 +144,15 @@ public class ChessPiece {
 
         if (pieceType == PieceType.PAWN){
             int change;
-            boolean second = false;
             if (board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE){
                 change = 1;
-                if (myRow == 2){
-                    second = true;
-                }
             }else{
                 change = -1;
-                if (myRow == 7){
-                    second = true;
-                }
             }
             moves.addAll(addPawnMoves(board, myPosition, change, 0));
-//            if (second == true) {
-//                moves.addAll(addMoves(board, myPosition, change * 2, 0));
-//            }
         }
 
-
-
-
-            return moves;
+        return moves;
     }
 
     public Collection<ChessMove> addMoves(ChessBoard board, ChessPosition myPosition, int rowChange, int colChange){
@@ -208,26 +193,23 @@ public class ChessPiece {
         Collection<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
-        PieceType myType = board.getPiece(myPosition).getPieceType();
 
         while (row <= 8 && row > 0 && col <= 8 && col > 0){
-//            if (rowChange > 0){
-                row += rowChange;
-                col += colChange;
-                ChessPosition endPosition = new ChessPosition(row, col);
+            row += rowChange;
+            col += colChange;
+            ChessPosition endPosition = new ChessPosition(row, col);
 
-                if (board.getPiece(endPosition) == null){
-                    moves.addAll(pawnAdd(board, myPosition, endPosition));
-                }
-                endPosition = new ChessPosition(row, col+1);
-                if (col+1 <=8 && isAlly(board, myPosition, endPosition) == false){
-                    moves.addAll(pawnAdd(board, myPosition, endPosition));
-                }
-                endPosition = new ChessPosition(row, col-1);
-                if (col-1 >= 1 && isAlly(board, myPosition, endPosition) == false){
-                    moves.addAll(pawnAdd(board, myPosition, endPosition));
-                }
+            if (board.getPiece(endPosition) == null){
+                moves.addAll(pawnAdd(board, myPosition, endPosition));
+            }
+            endPosition = new ChessPosition(row, col+1);
+            if (col+1 <=8 && isAlly(board, myPosition, endPosition) == false){
+                moves.addAll(pawnAdd(board, myPosition, endPosition));
+            }
+            endPosition = new ChessPosition(row, col-1);
+            if (col-1 >= 1 && isAlly(board, myPosition, endPosition) == false){
+                moves.addAll(pawnAdd(board, myPosition, endPosition));
+            }
 
             if (rowChange > 0){
                 if (row == 3){
