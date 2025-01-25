@@ -190,6 +190,7 @@ public class ChessPiece {
     }
 
     public Collection<ChessMove> addPawnMoves(ChessBoard board, ChessPosition myPosition, int rowChange, int colChange){
+
         Collection<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -224,7 +225,6 @@ public class ChessPiece {
                     }
                 }
             }
-
             break;
         }
 
