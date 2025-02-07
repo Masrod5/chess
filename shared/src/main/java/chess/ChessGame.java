@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -15,7 +16,7 @@ public class ChessGame {
     private TeamColor whoseTurn = TeamColor.WHITE;
 
     public ChessGame() {
-
+        board.resetBoard();
     }
 
     /**
@@ -59,14 +60,19 @@ public class ChessGame {
         for (ChessMove move : moves){
             ChessBoard tempBoard = clone(board);
             ChessGame tempGame = new ChessGame();
+            tempGame.setBoard(tempBoard);
 
 
             ChessPiece piece = tempBoard.getPiece(move.getStartPosition());
 
-            tempBoard.addPiece(move.getStartPosition(), null);
-            tempBoard.addPiece(move.getEndPosition(), piece);
+            tempGame.getBoard().addPiece(move.getStartPosition(), null);
+            tempGame.getBoard().addPiece(move.getEndPosition(), piece);
 
-            if (!isInCheck(piece.getTeamColor())){
+//            tempBoard.addPiece(move.getStartPosition(), null);
+//            tempBoard.addPiece(move.getEndPosition(), piece);
+
+
+            if (!tempGame.isInCheck(piece.getTeamColor())){
                 newMoves.add(move);
             }
 
@@ -98,11 +104,36 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
 
+        if (piece == null){
+            throw new InvalidMoveException();
+        }
 
+        if (!getTeamTurn().equals(piece.getTeamColor())){
+            throw new InvalidMoveException();
+        }
 
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
 
+        ChessPiece.PieceType promotion = move.getPromotionPiece();
 
+        if (validMoves.contains(move)){
+            board.addPiece(move.getStartPosition(), null);
+            if (promotion != null){
+                board.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), promotion));
+            }else {
+                board.addPiece(move.getEndPosition(), piece);
+            }
+        }else{
+            throw new InvalidMoveException();
+        }
+
+        if (piece.getTeamColor() == TeamColor.WHITE){
+            setTeamTurn(TeamColor.BLACK);
+        }else{
+            setTeamTurn(TeamColor.WHITE);
+        }
     }
 
     /**
@@ -138,7 +169,7 @@ public class ChessGame {
         }
 
         for(ChessMove move : opponentMoves){
-            if (move.getEndPosition() == kingPosition){
+            if (move.getEndPosition().equals(kingPosition)){
                 return true;
             }
         }
@@ -155,7 +186,21 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
+        ChessPosition kingPosition = null;
+
+        for (int i = 1; i <= 8; i++){
+            for (int j = 1; j <= 8; j++){
+                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+                if (piece != null && piece.getPieceType() == ChessPiece.PieceType.KING){
+                    if (piece.getTeamColor() == teamColor){
+                        kingPosition = new ChessPosition(i, j);
+                    }
+                }
+            }
+        }
+
+
     }
 
     /**
@@ -185,5 +230,31 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return Objects.equals(board, chessGame.board) && whoseTurn == chessGame.whoseTurn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board, whoseTurn);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessGame{" +
+                "board=" + board +
+                ", whoseTurn=" + whoseTurn +
+                '}';
     }
 }
