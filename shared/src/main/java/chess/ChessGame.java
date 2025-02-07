@@ -112,51 +112,39 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        TeamColor otherTeamColor;
-        Collection<ChessMove> otherMoves = new ArrayList<>();
-        
-        ChessPiece king = null;
+        ArrayList<ChessMove> opponentMoves = new ArrayList<ChessMove>();
+        /** list of all the chessMoves that are possible for the other team */
+        for (int i = 1; i <= 8; i++){
+            for (int j = 1; j <= 8; j++){
+                if (board.getPiece(new ChessPosition(i, j)) != null) {
+                    if (board.getPiece(new ChessPosition(i, j)).getTeamColor() != teamColor) {
+                        opponentMoves.addAll(board.getPiece(new ChessPosition(i, j)).pieceMoves(board, new ChessPosition(i, j)));
+                    }
+                }
+            }
+        }
+
         ChessPosition kingPosition = null;
-        ChessBoard board = getBoard();
-        for (int i = 0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
-                ChessPosition curPosition = new ChessPosition(i+1, j+1);
 
-                if (board.getPiece(curPosition) != null && board.getPiece(curPosition).getPieceType() == ChessPiece.PieceType.KING && board.getPiece(curPosition).getTeamColor() == teamColor){
-                    king = board.getPiece(curPosition);
-                    kingPosition = curPosition;
-                    break;
-                }
-            }
-            if (king != null){
-                break;
-            }
-        }
-        
-        if (king.getTeamColor() == TeamColor.WHITE){
-            otherTeamColor = TeamColor.BLACK;
-        }else{
-            otherTeamColor = TeamColor.WHITE;
-        }
-
-        for (int i = 0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
-                ChessPosition curPosition = new ChessPosition(i+1, j+1);
-                ChessPiece curPiece = board.getPiece(curPosition);
-                if (curPiece != null && curPiece.getTeamColor() == otherTeamColor){
-                    otherMoves.addAll(curPiece.pieceMoves(board, curPosition));
+        for (int i = 1; i <= 8; i++){
+            for (int j = 1; j <= 8; j++){
+                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+                if (piece != null && piece.getPieceType() == ChessPiece.PieceType.KING){
+                    if (piece.getTeamColor() == teamColor){
+                        kingPosition = new ChessPosition(i, j);
+                    }
                 }
             }
         }
-        
-        for (ChessMove move : otherMoves){
+
+        for(ChessMove move : opponentMoves){
             if (move.getEndPosition() == kingPosition){
                 return true;
             }
         }
-        
-        
+
         return false;
+
     }
     
 
