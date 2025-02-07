@@ -57,15 +57,18 @@ public class ChessGame {
         ArrayList<ChessMove> newMoves = new ArrayList<>();
 
         for (ChessMove move : moves){
-            ChessBoard tempBoard =new ChessBoard();
-
-
+            ChessBoard tempBoard = clone(board);
             ChessGame tempGame = new ChessGame();
-            tempGame.setBoard(board);
-
-            tempBoard = tempGame.getBoard();
 
 
+            ChessPiece piece = tempBoard.getPiece(move.getStartPosition());
+
+            tempBoard.addPiece(move.getStartPosition(), null);
+            tempBoard.addPiece(move.getEndPosition(), piece);
+
+            if (!isInCheck(piece.getTeamColor())){
+                newMoves.add(move);
+            }
 
         }
 
@@ -73,7 +76,18 @@ public class ChessGame {
 
 
 
-        return moves;
+        return newMoves;
+    }
+
+    public ChessBoard clone(ChessBoard board){
+        ChessBoard newBoard = new ChessBoard();
+        for(int i = 1; i <= 8;i++){
+            for (int j = 1; j <= 8; j++){
+                newBoard.addPiece(new ChessPosition(i, j), board.getPiece(new ChessPosition(i, j)));
+            }
+        }
+
+        return newBoard;
     }
 
 
@@ -84,7 +98,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        board.
+
 
 
 
@@ -106,8 +120,9 @@ public class ChessGame {
         ChessBoard board = getBoard();
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                ChessPosition curPosition = new ChessPosition(i, j);
-                if (board.getPiece(curPosition).getPieceType() == ChessPiece.PieceType.KING && board.getPiece(curPosition).getTeamColor() == teamColor){
+                ChessPosition curPosition = new ChessPosition(i+1, j+1);
+
+                if (board.getPiece(curPosition) != null && board.getPiece(curPosition).getPieceType() == ChessPiece.PieceType.KING && board.getPiece(curPosition).getTeamColor() == teamColor){
                     king = board.getPiece(curPosition);
                     kingPosition = curPosition;
                     break;
@@ -126,9 +141,9 @@ public class ChessGame {
 
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                ChessPosition curPosition = new ChessPosition(i, j);
+                ChessPosition curPosition = new ChessPosition(i+1, j+1);
                 ChessPiece curPiece = board.getPiece(curPosition);
-                if (curPiece.getTeamColor() == otherTeamColor){
+                if (curPiece != null && curPiece.getTeamColor() == otherTeamColor){
                     otherMoves.addAll(curPiece.pieceMoves(board, curPosition));
                 }
             }
