@@ -70,19 +70,10 @@ public class ChessGame {
             tempGame.getBoard().addPiece(move.getStartPosition(), null);
             tempGame.getBoard().addPiece(move.getEndPosition(), piece);
 
-//            tempBoard.addPiece(move.getStartPosition(), null);
-//            tempBoard.addPiece(move.getEndPosition(), piece);
-
-
             if (!tempGame.isInCheck(piece.getTeamColor())){
                 newMoves.add(move);
             }
-
         }
-
-
-
-
 
         return newMoves;
     }
@@ -178,6 +169,7 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
         ArrayList<ChessMove> opponentMoves = new ArrayList<ChessMove>();
         /** list of all the chessMoves that are possible for the other team */
+
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
                 if (board.getPiece(new ChessPosition(i, j)) != null) {
@@ -197,9 +189,7 @@ public class ChessGame {
         }
 
         return false;
-
     }
-    
 
     /**
      * Determines if the given team is in checkmate
@@ -208,19 +198,12 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-
-        ChessPosition kingPosition = findKingPosition(teamColor);
-
-        Collection<ChessMove> kingValidMoves = validMoves(kingPosition);
-
         Collection<ChessMove> teamValidMoves = allTeamValidMoves(board, teamColor);
 
         if (teamValidMoves.isEmpty() && isInCheck(teamColor)){
             return true;
         }
         return false;
-
-
     }
 
     /**
@@ -231,10 +214,6 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        ChessPosition kingPosition = findKingPosition(teamColor);
-
-        Collection<ChessMove> kingValidMoves = validMoves(kingPosition);
-
         Collection<ChessMove> teamValidMoves = allTeamValidMoves(board, teamColor);
 
         if (teamValidMoves.isEmpty() && !isInCheck(teamColor)){
