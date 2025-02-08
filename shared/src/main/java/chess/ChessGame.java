@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 public class ChessGame {
 
-    //  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
+    //
     private ChessBoard board = new ChessBoard();
     private TeamColor whoseTurn = TeamColor.WHITE;
 
