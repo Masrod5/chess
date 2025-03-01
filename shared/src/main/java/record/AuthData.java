@@ -1,4 +1,5 @@
 package record;
 
-public class AuthData {
+public record AuthData(String authToken, String username) {
+
 }

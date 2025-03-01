@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import dataaccess.*;
 import record.*;
 import spark.*;
+import service.Service;
 
 public class Server {
 
@@ -27,13 +28,13 @@ public class Server {
         return Spark.port();
     }
 
-    private String register(Request req, Response res) {
+    private String register(Request req, Response res) throws DataAccessException {
         Gson serialize = new Gson();
         UserData request = serialize.fromJson(req.body(), UserData.class);
 
-        AuthData auth = Service(userDAO, )
+        AuthData auth = new Service(userDAO, authDAO, gameDAO).register(request);
 
-        return null;
+        return serialize.toJson(auth);
     }
 
     public void stop() {
