@@ -2,9 +2,11 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.*;
-import record.*;
+import model.*;
 import spark.*;
 import service.Service;
+
+import java.util.Objects;
 
 public class Server {
 
@@ -12,14 +14,20 @@ public class Server {
     AuthDAO authDAO;
     GameDAO gameDAO;
 
-    public int run(int desiredPort) {
+    public int run(int desiredPort) throws DataAccessException {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
 
+
+        userDAO = new MemoryUserDAO();
+        authDAO = new MemoryAuthDAO();
+
         // Register your endpoints and handle exceptions here.
 
         Spark.post("/user", this::register);
+        Spark.exception(DataAccessException.class, this::failerResponse);
+
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -27,6 +35,63 @@ public class Server {
         Spark.awaitInitialization();
         return Spark.port();
     }
+
+    private String failerResponse(DataAccessException exception, Request req, Response res){
+        Gson serialize = new Gson();
+        FailerResponse request = serialize.fromJson(req.body(), FailerResponse.class);
+
+
+
+        if(Objects.equals(exception.getMessage(), "already taken")){
+            res.status(403);
+            request = new FailerResponse("Error: already taken");
+
+            String json = serialize.toJson(request);
+
+            res.body(json);
+            return json;
+        }
+        if(Objects.equals(exception.getMessage(), "bad request")){
+            res.status(400);
+            request = new FailerResponse("Error: bad request");
+
+            String json = serialize.toJson(request);
+
+            res.body(json);
+            return json;
+        }
+        if(Objects.equals(exception.getMessage(), "unauthorized")){
+            res.status(401);
+            request = new FailerResponse("Error: unauthorized");
+
+            String json = serialize.toJson(request);
+
+            res.body(json);
+            return json;
+        }
+        if(Objects.equals(exception.getMessage(), "you are not logged in")){
+            res.status(500);
+            request = new FailerResponse("Error: you are not logged in");
+
+            String json = serialize.toJson(request);
+
+            res.body(json);
+            return json;
+        } //(Objects.equals(exception.getMessage(), "you are logged in"))
+        else {
+            res.status(500);
+            request = new FailerResponse(exception.getMessage());
+
+            String json = serialize.toJson(request);
+
+            res.body(json);
+            return json;
+        }
+
+
+
+    }
+
 
     private String register(Request req, Response res) throws DataAccessException {
         Gson serialize = new Gson();
