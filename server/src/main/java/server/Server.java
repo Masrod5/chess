@@ -28,6 +28,7 @@ public class Server {
 
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
+        Spark.delete("/session", this::logout);
         Spark.exception(DataAccessException.class, this::failerResponse);
 
 
@@ -37,6 +38,16 @@ public class Server {
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private String logout(Request request, Response response) throws DataAccessException {
+        Gson serialize = new Gson();
+        String header = serialize.fromJson(request.headers("authorization"), String.class);
+        new Service(userDAO, authDAO, gameDAO).logout(header);
+
+        return "{}";
+
+
     }
 
     private String clear(Request request, Response response) throws DataAccessException {

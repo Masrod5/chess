@@ -19,6 +19,13 @@ public class Service {
         this.gameDAO = gameDAO;
     }
 
+    public void logout(String header) throws DataAccessException {
+        if(authDAO.getAuth(header) == null){
+            throw new DataAccessException("unauthorized");
+        }
+        authDAO.deleteAuth(authDAO.getAuth(header));
+    }
+
     public AuthData register(UserData user) throws DataAccessException {
 
         UserData info;
