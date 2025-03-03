@@ -6,6 +6,7 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class Service {
 
@@ -60,5 +61,16 @@ public class Service {
         userDAO.clear();
         authDAO.clear();
         gameDAO.clear();
+    }
+
+    public AuthData login(LoginRequest loginRequest) throws DataAccessException {
+        UserData user = userDAO.getUser(loginRequest.username());
+
+        if (loginRequest != null && BCrypt.checkpw(user.password(), loginRequest.password())) {
+            AuthData newAuth = new AuthData(generateToken(), user.username());
+            authDAO.createAuth(newAuth);
+            return newAuth;
+        }
+        throw new DataAccessException("bad password");
     }
 }
