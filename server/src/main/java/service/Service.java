@@ -66,11 +66,11 @@ public class Service {
     public AuthData login(LoginRequest loginRequest) throws DataAccessException {
         UserData user = userDAO.getUser(loginRequest.username());
 
-        if (loginRequest != null && BCrypt.checkpw(user.password(), loginRequest.password())) {
-            AuthData newAuth = new AuthData(generateToken(), user.username());
+        if (user != null && BCrypt.checkpw(loginRequest.password(), user.password())) {
+            AuthData newAuth = new AuthData(generateToken(), loginRequest.username());
             authDAO.createAuth(newAuth);
             return newAuth;
         }
-        throw new DataAccessException("bad password");
+        throw new DataAccessException("unauthorized");
     }
 }

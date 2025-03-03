@@ -45,7 +45,9 @@ public class Server {
         Gson serialize = new Gson();
         LoginRequest loginRequest = serialize.fromJson(request.body(), LoginRequest.class);
 
-        new Service(userDAO, authDAO, gameDAO).login(loginRequest);
+        AuthData auth = new Service(userDAO, authDAO, gameDAO).login(loginRequest);
+
+        return serialize.toJson(auth);
     }
 
     private String logout(Request request, Response response) throws DataAccessException {
