@@ -6,6 +6,8 @@ import model.*;
 import spark.*;
 import service.Service;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Server {
@@ -30,6 +32,8 @@ public class Server {
         Spark.delete("/db", this::clear);
         Spark.delete("/session", this::logout);
         Spark.post("/session", this::login);
+        Spark.get("/game", this::listGames);
+        Spark.post("/game", this::createGame);
         Spark.exception(DataAccessException.class, this::failerResponse);
 
 
@@ -39,6 +43,22 @@ public class Server {
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private String createGame(Request request, Response response) throws DataAccessException {
+        Gson serialize = new Gson();
+
+    }
+
+    private String listGames(Request request, Response response) throws DataAccessException {
+        Gson serialize = new Gson();
+        String auth = request.headers("authorization");
+
+
+        ArrayList<GameData> games = new Service(userDAO, authDAO, gameDAO).listGames(auth);
+
+
+        return serialize.toJson(games);
     }
 
     private String login(Request request, Response response) throws DataAccessException {

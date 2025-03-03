@@ -1,4 +1,5 @@
 package service;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import dataaccess.AuthDAO;
@@ -72,5 +73,14 @@ public class Service {
             return newAuth;
         }
         throw new DataAccessException("unauthorized");
+    }
+
+    public ArrayList<GameData> listGames(String authToken) throws DataAccessException {
+
+        if (authDAO.getAuth(authToken) != null) {
+            return new ArrayList<>(gameDAO.listGames());
+        }else {
+            throw new DataAccessException("unauthorized");
+        }
     }
 }
