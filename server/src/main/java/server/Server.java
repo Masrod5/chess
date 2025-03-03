@@ -22,11 +22,14 @@ public class Server {
 
         userDAO = new MemoryUserDAO();
         authDAO = new MemoryAuthDAO();
+        gameDAO = new MemoryGameDAO();
 
         // Register your endpoints and handle exceptions here.
 
         Spark.post("/user", this::register);
+        Spark.delete("/db", this::clear);
         Spark.exception(DataAccessException.class, this::failerResponse);
+
 
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
@@ -34,6 +37,11 @@ public class Server {
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private String clear(Request request, Response response) throws DataAccessException {
+        new Service(userDAO, authDAO, gameDAO).clear();
+        return "{}";
     }
 
     private String failerResponse(DataAccessException exception, Request req, Response res){
