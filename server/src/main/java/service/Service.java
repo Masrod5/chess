@@ -1,5 +1,6 @@
 package service;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 import dataaccess.AuthDAO;
@@ -11,6 +12,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class Service {
 
+    static int gameID = 0;
     UserDAO userDAO;
     AuthDAO authDAO;
     GameDAO gameDAO;
@@ -57,7 +59,6 @@ public class Service {
         return UUID.randomUUID().toString();
     }
 
-
     public void clear() throws DataAccessException {
         userDAO.clear();
         authDAO.clear();
@@ -82,5 +83,41 @@ public class Service {
         }else {
             throw new DataAccessException("unauthorized");
         }
+    }
+
+    public int createGame(String authorization, GameData game) throws DataAccessException {
+        gameID++;
+
+        return gameDAO.createGame(new GameData(gameID, null, null, game.gameName(), game.game()));
+
+    }
+
+    public void joinGame(JoinGameRequest joinRequest, String auth) throws DataAccessException {
+        String color = joinRequest.playerColor();
+        int gameID = joinRequest.gameID();
+
+        GameData oldGame = gameDAO.getGame(gameID);
+        String newWhiteName = oldGame.whiteUsername();
+        String newBlackName = oldGame.blackUsername();
+
+        if (Objects.equals(color, "WHITE")){
+            if (gameDAO.getGame(gameID).whiteUsername() != null){
+                throw new DataAccessException("already taken");
+            }
+            newWhiteName = authDAO.getAuth(auth).username();
+
+        }else if (Objects.equals(color, "BLACK")){
+            if (gameDAO.getGame(gameID).blackUsername() != null){
+                throw new DataAccessException("already taken");
+            }
+            newBlackName = authDAO.getAuth(auth).username();
+
+        }else{
+            throw new DataAccessException("bad request");
+        }
+
+        GameData updatedGame = new GameData(gameID, newWhiteName, newBlackName, oldGame.gameName(), oldGame.game());
+
+        gameDAO.updateGame(updatedGame);
     }
 }

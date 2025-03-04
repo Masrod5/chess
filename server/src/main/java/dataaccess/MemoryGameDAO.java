@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MemoryGameDAO implements GameDAO{
 
-    private final List<GameData> games = new ArrayList<>();
+    private final ArrayList<GameData> games = new ArrayList<>();
 
     @Override
     public void clear() throws DataAccessException {
@@ -16,21 +16,32 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public int createGame(GameData game) throws DataAccessException {
-        return 0;
+        games.add(game);
+        return game.gameID();
     }
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
+        for (GameData game: games){
+            if (game.gameID() == gameID){
+                return game;
+            }
+        }
         return null;
     }
 
     @Override
     public List<GameData> listGames() throws DataAccessException {
-        return List.of();
+        return games;
     }
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-
+        for (int i = 0; i < games.size(); i++){
+            if (games.get(i).gameID() == game.gameID()){
+                games.set(i, game);
+                break;
+            }
+        }
     }
 }

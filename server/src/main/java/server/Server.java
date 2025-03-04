@@ -34,6 +34,7 @@ public class Server {
         Spark.post("/session", this::login);
         Spark.get("/game", this::listGames);
         Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
         Spark.exception(DataAccessException.class, this::failerResponse);
 
 
@@ -45,9 +46,23 @@ public class Server {
         return Spark.port();
     }
 
+    private String joinGame(Request request, Response response) throws DataAccessException {
+        Gson serialize = new Gson();
+        JoinGameRequest joinRequest = serialize.fromJson(request.body(), JoinGameRequest.class);
+        String auth = request.headers("authorization");
+
+        new Service(userDAO, authDAO, gameDAO).joinGame(joinRequest, auth);
+
+        return "{}";
+    }
+
     private String createGame(Request request, Response response) throws DataAccessException {
         Gson serialize = new Gson();
+        GameData game = serialize.fromJson(request.body(), GameData.class);
 
+        int newGameID = new Service(userDAO, authDAO, gameDAO).createGame(request.headers("authorization"), game);
+
+        return serialize.toJson(newGameID);
     }
 
     private String listGames(Request request, Response response) throws DataAccessException {
