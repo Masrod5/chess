@@ -45,13 +45,11 @@ public class Service {
             throw new DataAccessException("bad request");
         }
         if (info == null){
-
             userDAO.createUser(user);
             AuthData newAuth = new AuthData(generateToken(), user.username());
             authDAO.createAuth(newAuth);
             return newAuth;
         }
-
         throw new DataAccessException("already taken");
     }
 
@@ -77,7 +75,6 @@ public class Service {
     }
 
     public ListGames listGames(String authToken) throws DataAccessException {
-
         if (authDAO.getAuth(authToken) != null) {
             ArrayList<GameData> games = new ArrayList<>(gameDAO.listGames());
             return new ListGames(games);
@@ -88,7 +85,6 @@ public class Service {
 
     public GameData createGame(String authorization, GameData game) throws DataAccessException {
         gameID++;
-
         if (game.gameName().isEmpty()){
             throw new DataAccessException("bad request");
         }

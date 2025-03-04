@@ -22,7 +22,6 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-
         userDAO = new MemoryUserDAO();
         authDAO = new MemoryAuthDAO();
         gameDAO = new MemoryGameDAO();
@@ -38,10 +37,8 @@ public class Server {
         Spark.put("/game", this::joinGame);
         Spark.exception(DataAccessException.class, this::failerResponse);
 
-
-
         //This line initializes the server and can be removed once you have a functioning endpoint 
-        Spark.init();
+//        Spark.init();
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -70,9 +67,7 @@ public class Server {
         Gson serialize = new Gson();
         String auth = request.headers("authorization");
 
-
         ListGames games = new Service(userDAO, authDAO, gameDAO).listGames(auth);
-
 
         return serialize.toJson(games);
     }
@@ -92,8 +87,6 @@ public class Server {
         new Service(userDAO, authDAO, gameDAO).logout(header);
 
         return "{}";
-
-
     }
 
     private String clear(Request request, Response response) throws DataAccessException {
@@ -104,8 +97,6 @@ public class Server {
     private String failerResponse(DataAccessException exception, Request req, Response res){
         Gson serialize = new Gson();
         FailerResponse request = serialize.fromJson(req.body(), FailerResponse.class);
-
-
 
         if(Objects.equals(exception.getMessage(), "already taken")){
             res.status(403);
@@ -142,8 +133,7 @@ public class Server {
 
             res.body(json);
             return json;
-        } //(Objects.equals(exception.getMessage(), "you are logged in"))
-        else {
+        } else {
             res.status(500);
             request = new FailerResponse(exception.getMessage());
 
@@ -152,11 +142,7 @@ public class Server {
             res.body(json);
             return json;
         }
-
-
-
     }
-
 
     private String register(Request req, Response res) throws DataAccessException {
         Gson serialize = new Gson();
