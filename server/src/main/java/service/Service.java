@@ -76,23 +76,40 @@ public class Service {
         throw new DataAccessException("unauthorized");
     }
 
-    public ArrayList<GameData> listGames(String authToken) throws DataAccessException {
+    public ListGames listGames(String authToken) throws DataAccessException {
 
         if (authDAO.getAuth(authToken) != null) {
-            return new ArrayList<>(gameDAO.listGames());
+            ArrayList<GameData> games = new ArrayList<>(gameDAO.listGames());
+            return new ListGames(games);
         }else {
             throw new DataAccessException("unauthorized");
         }
     }
 
-    public int createGame(String authorization, GameData game) throws DataAccessException {
+    public GameData createGame(String authorization, GameData game) throws DataAccessException {
         gameID++;
 
-        return gameDAO.createGame(new GameData(gameID, null, null, game.gameName(), game.game()));
+        if (game.gameName().isEmpty()){
+            throw new DataAccessException("bad request");
+        }
+        if (authDAO.getAuth(authorization) == null){
+            throw new DataAccessException("unauthorized");
+        }
 
+        var i = gameDAO.createGame(new GameData(gameID, null, null, game.gameName(), game.game()));
+
+        return new GameData(i, null, null, null, null);
     }
 
     public void joinGame(JoinGameRequest joinRequest, String auth) throws DataAccessException {
+
+        if (joinRequest.playerColor() == null || gameDAO.getGame(joinRequest.gameID()) == null){
+            throw new DataAccessException("bad request");
+        }
+        if (authDAO.getAuth(auth) == null){
+            throw new DataAccessException("unauthorized");
+        }
+
         String color = joinRequest.playerColor();
         int gameID = joinRequest.gameID();
 
@@ -116,7 +133,7 @@ public class Service {
             throw new DataAccessException("bad request");
         }
 
-        GameData updatedGame = new GameData(gameID, newWhiteName, newBlackName, oldGame.gameName(), oldGame.game());
+        GameData updatedGame = new GameData(oldGame.gameID(), newWhiteName, newBlackName, oldGame.gameName(), oldGame.game());
 
         gameDAO.updateGame(updatedGame);
     }

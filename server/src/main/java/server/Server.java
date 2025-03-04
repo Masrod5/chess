@@ -8,6 +8,7 @@ import service.Service;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Server {
@@ -60,9 +61,9 @@ public class Server {
         Gson serialize = new Gson();
         GameData game = serialize.fromJson(request.body(), GameData.class);
 
-        int newGameID = new Service(userDAO, authDAO, gameDAO).createGame(request.headers("authorization"), game);
+        GameData newGame = new Service(userDAO, authDAO, gameDAO).createGame(request.headers("authorization"), game);
 
-        return serialize.toJson(newGameID);
+        return serialize.toJson(newGame);
     }
 
     private String listGames(Request request, Response response) throws DataAccessException {
@@ -70,7 +71,7 @@ public class Server {
         String auth = request.headers("authorization");
 
 
-        ArrayList<GameData> games = new Service(userDAO, authDAO, gameDAO).listGames(auth);
+        ListGames games = new Service(userDAO, authDAO, gameDAO).listGames(auth);
 
 
         return serialize.toJson(games);
