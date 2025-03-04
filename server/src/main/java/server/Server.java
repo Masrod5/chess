@@ -17,7 +17,7 @@ public class Server {
     AuthDAO authDAO;
     GameDAO gameDAO;
 
-    public int run(int desiredPort) throws DataAccessException {
+    public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
