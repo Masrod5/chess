@@ -22,9 +22,19 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        userDAO = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
-        gameDAO = new MemoryGameDAO();
+//        userDAO = new MemoryUserDAO();
+//        authDAO = new MemoryAuthDAO();
+//        gameDAO = new MemoryGameDAO();
+
+        try {
+            userDAO = new MySQLUserDAO();
+//            gameDAO = new MySQLGameDAO();
+//            authDAO = new MySQLAuthDAO();
+
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
 
         // Register your endpoints and handle exceptions here.
 
@@ -40,7 +50,7 @@ public class Server {
         //This line initializes the server and can be removed once you have a functioning endpoint 
 //        Spark.init();
 
-        Spark.awaitInitialization();
+//        Spark.awaitInitialization();
         return Spark.port();
     }
 
