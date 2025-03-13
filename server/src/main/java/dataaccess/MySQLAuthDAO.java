@@ -1,7 +1,9 @@
 package dataaccess;
 
+import com.google.gson.Gson;
 import model.AuthData;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -44,17 +46,50 @@ public class MySQLAuthDAO implements AuthDAO{
 
     @Override
     public void createAuth(AuthData auth) throws DataAccessException {
+        var statement = "INSERT INTO AUTH (authToken, username) VALUES (?, ?)";
 
+        var json = new Gson().toJson(auth);
+        executeUpdate(statement, auth.authToken(), auth.username(), json);
     }
 
     @Override
     public AuthData getAuth(String auth) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+
+            var statement = "SELECT * FROM AUTH WHERE authToken= ?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, auth);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+
+                        return readAuth(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
         return null;
+    }
+
+    private AuthData readAuth(ResultSet rs) throws SQLException {
+        var authToken = rs.getString("authToken");
+        var username = rs.getString("username");
+        AuthData newAuth = new AuthData(authToken, username);
+
+        return newAuth;
     }
 
     @Override
     public void deleteAuth(AuthData auth) throws DataAccessException {
-
+        try (var conn = DatabaseManager.getConnection()) {                          //try with resources
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM AUTH WHERE authToken=?")) {
+                preparedStatement.setString(1, auth.authToken());
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private final String[] createStatements = {
