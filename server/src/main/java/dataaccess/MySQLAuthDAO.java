@@ -2,6 +2,10 @@ package dataaccess;
 
 import model.AuthData;
 
+import java.sql.SQLException;
+
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 public class MySQLAuthDAO implements AuthDAO{
 
     public MySQLAuthDAO() throws DataAccessException {
@@ -14,7 +18,28 @@ public class MySQLAuthDAO implements AuthDAO{
 
     @Override
     public void clear() throws DataAccessException {
+        var statement = "TRUNCATE AUTH";
+        executeUpdate(statement);
+    }
 
+    private void executeUpdate(String statement, Object... params) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {                          //try with resources
+            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) { // get the prepared statement
+                for (var i = 0; i < params.length-1; i++) {
+                    var param = params[i];
+                    if (param instanceof String p) {
+                        ps.setString(i + 1, p); //set all the parameters
+                    }
+                    else if (param instanceof Integer p){
+                        ps.setInt(i + 1, p);
+                    }
+                }
+                ps.executeUpdate();
+
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
+        }
     }
 
     @Override
