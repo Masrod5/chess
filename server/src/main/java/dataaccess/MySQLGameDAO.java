@@ -12,7 +12,7 @@ public class MySQLGameDAO implements GameDAO{
     }
 
     private void configureDatabase() throws DataAccessException {
-
+        MySQLUserDAO.createDatabase(createStatements);
     }
 
 

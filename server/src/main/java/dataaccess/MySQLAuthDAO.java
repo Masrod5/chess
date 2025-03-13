@@ -3,6 +3,15 @@ package dataaccess;
 import model.AuthData;
 
 public class MySQLAuthDAO implements AuthDAO{
+
+    public MySQLAuthDAO() throws DataAccessException {
+        configureDatabase();
+    }
+
+    private void configureDatabase() throws DataAccessException {
+        MySQLUserDAO.createDatabase(createStatements); // use the same method as in MySQLUserDAO
+    }
+
     @Override
     public void clear() throws DataAccessException {
 

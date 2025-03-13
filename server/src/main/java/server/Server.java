@@ -28,8 +28,8 @@ public class Server {
 
         try {
             userDAO = new MySQLUserDAO();
-//            gameDAO = new MySQLGameDAO();
-//            authDAO = new MySQLAuthDAO();
+            gameDAO = new MySQLGameDAO();
+            authDAO = new MySQLAuthDAO();
 
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
