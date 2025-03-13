@@ -40,17 +40,11 @@ public class MySQLGameDAO implements GameDAO{
                     var param = params[i];
 
                     // might switch this to the suggested switch statement
-                    if (param instanceof String p) {
-                        ps.setString(i + 1, p);//set all the parameters
-                    }
-                    else if (param instanceof Integer p){
-                        ps.setInt(i + 1, p);
-                    }
-                    else if (param == null) {
-                        ps.setNull(i + 1, NULL);
-                    }
-                    else {
-                        throw new IllegalArgumentException("" + i + "is not supported");
+                    switch (param) {
+                        case String p -> ps.setString(i + 1, p);//set all the parameters
+                        case Integer p -> ps.setInt(i + 1, p);
+                        case null -> ps.setNull(i + 1, NULL);
+                        default -> throw new IllegalArgumentException("" + i + "is not supported");
                     }
                 }
                 ps.executeUpdate();
