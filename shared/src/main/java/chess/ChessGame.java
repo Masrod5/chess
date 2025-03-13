@@ -98,7 +98,6 @@ public class ChessGame {
                 newBoard.addPiece(new ChessPosition(i, j), board.getPiece(new ChessPosition(i, j)));
             }
         }
-
         return newBoard;
     }
 

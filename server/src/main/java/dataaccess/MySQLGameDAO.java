@@ -1,8 +1,12 @@
 package dataaccess;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
 import model.GameData;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -64,17 +68,63 @@ public class MySQLGameDAO implements GameDAO{
 
     @Override
     public int createGame(GameData game) throws DataAccessException {
-        return 0;
+        var statement = "INSERT INTO GAME (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
+        var gameJson = new Gson().toJson(game.game());
+
+        executeUpdate(statement, game.whiteUsername(), game.blackUsername(), game.gameName(), gameJson);
+        return id;
     }
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+
+            var statement = "SELECT * FROM GAME WHERE gameID= ?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, gameID);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readGame(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
         return null;
+    }
+
+    private GameData readGame(ResultSet rs) throws SQLException {
+        Gson json = new Gson();
+
+        var gameID = rs.getInt("gameID");
+        var whiteUsername = rs.getString("whiteUsername");
+        var blackUsername = rs.getString("blackUsername");
+        var gameName = rs.getString("gameName");
+
+        var gameString = rs.getString("game");
+        var game = json.fromJson(gameString, ChessGame.class);
+
+        return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
     }
 
     @Override
     public List<GameData> listGames() throws DataAccessException {
-        return List.of();
+        var games = new ArrayList<GameData>();
+
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM GAME";
+            try (var ps = conn.prepareStatement(statement)) {
+                try (var rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        games.add(readGame(rs));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return games;
     }
 
     @Override
