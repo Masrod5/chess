@@ -1,8 +1,10 @@
 package dataaccess;
 
+import com.google.gson.Gson;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -59,12 +61,40 @@ public class MySQLUserDAO implements UserDAO{
 
     @Override
     public UserData createUser(UserData user) throws DataAccessException {
-        return null;
+        var statement = "INSERT INTO USER (username, password, email) VALUES (?, ?, ?)";
+        var json = new Gson().toJson(user);
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt()); // created the encrypted password
+
+        executeUpdate(statement, user.username(), hashedPassword, user.email(), json);
+        return new UserData(user.username(), user.password(), user.email());
+
     }
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+
+            var statement = "SELECT * FROM USER WHERE username= ?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, username);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readUser(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
         return null;
+    }
+
+    private UserData readUser(ResultSet rs) throws SQLException {
+        var username = rs.getString("username");
+        var password = rs.getString("password");
+        var email = rs.getString("email");
+
+        return new UserData(username, password, email);
     }
 
 
