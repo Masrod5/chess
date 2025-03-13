@@ -22,10 +22,6 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-//        userDAO = new MemoryUserDAO();
-//        authDAO = new MemoryAuthDAO();
-//        gameDAO = new MemoryGameDAO();
-
         try {
             userDAO = new MySQLUserDAO();
             gameDAO = new MySQLGameDAO();
