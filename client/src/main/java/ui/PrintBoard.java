@@ -20,7 +20,7 @@ public class PrintBoard {
         String[] headers = {"a", "b", "c", "d", "e", "f", "g", "h"};
         out.print("   ");
         for (int boardCol = 0; boardCol < 8; ++boardCol) {
-            out.print(" " + headers[abs(boardCol + add)] + " ");
+            out.print(HEAD_SPACE + headers[abs(boardCol + add)] + HEAD_SPACE);
         }
         out.print("   ");
 
