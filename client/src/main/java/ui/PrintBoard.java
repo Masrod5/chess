@@ -71,7 +71,7 @@ public class PrintBoard {
                     } else if (green == true){
                         out.print(SET_BG_COLOR_GREEN);
                     }else {
-                        out.print(SET_BG_COLOR_BLUE);
+                        out.print(SET_BG_COLOR_LIGHT_RED);
                     }
                 }else{
                     if (yellow == true) {
@@ -79,7 +79,7 @@ public class PrintBoard {
                     } else if (green == true){
                         out.print(SET_BG_COLOR_DARK_GREEN);
                     }else {
-                        out.print(SET_BG_COLOR_DARK_GREY);
+                        out.print(SET_BG_COLOR_RED);
                     }
                 }
                 printPiece(out, abs(j + add), abs(i + add), board);
@@ -106,9 +106,9 @@ public class PrintBoard {
             out.print(EMPTY);
         }else {
             if (tempPiece.getTeamColor() == ChessGame.TeamColor.WHITE){
-                out.print(SET_TEXT_COLOR_RED);
+                out.print(SET_TEXT_COLOR_BLACK);
             }else {
-                out.print(SET_TEXT_COLOR_YELLOW);
+                out.print(SET_TEXT_COLOR_WHITE);
             }
 
             if (tempPiece.getPieceType() == ChessPiece.PieceType.ROOK) {
