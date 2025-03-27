@@ -1,5 +1,6 @@
 package serverfacade;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import model.*;
 
@@ -38,7 +39,7 @@ public class ServerFacade {
 //        UserData user = new UserData("ha", "ha", "ha");
         GameName test = new GameName(name);
         GameData newGame = this.makeRequest("POST", path, test, GameData.class);
-        newGame.game().getBoard().resetBoard();
+//        newGame.game().getBoard().resetBoard();
 //        currGameID++;
         return newGame.gameID();
     }
