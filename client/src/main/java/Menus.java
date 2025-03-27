@@ -293,12 +293,7 @@ public class Menus {
     public String leave() throws Exception {
         int gameIndex = currentGameID;
         int dataGameID = gameList.get(gameIndex-1).gameID();
-
-
         server.leaveGame(dataGameID, "WHITE");
-
-
-
         return "left the game";
     }
 
