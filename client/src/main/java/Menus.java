@@ -117,7 +117,7 @@ public class Menus {
             int gameID = Integer.parseInt(params.get(0));
             String color = params.get(1).toUpperCase();
             if (!(color.equals("BLACK") || color.equals("WHITE"))){
-                return "team to join as must be typed \"black\" or \"white\"";
+                return "team to join as must be typed \"(b)lack\" or \"(w)hite\"";
             }
             if (gameList == null){
                 return "you must run \"list\" before you can join a game";
@@ -140,7 +140,8 @@ public class Menus {
                 drawBoard(new ChessGame().getBoard(), true, null);
             }
 
-            state = State.JOINED;
+            state = State.LOGIN;
+//            state = State.JOINED; uncomment in phase 6
             return "joined game: " + gameID + " as " + color;
         }else{
             return "incorrect number of parameters";
