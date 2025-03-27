@@ -238,7 +238,7 @@ public class Menus {
         return "incorrect number of parameters";
     }
 
-    private int StringToNumber(String letter){
+    private int stringToNumber(String letter){
         return switch (letter){
             case "a" -> 1;
             case "b" -> 2;
@@ -270,7 +270,7 @@ public class Menus {
                 ChessBoard board = new ChessBoard();
                 board.resetBoard();
 
-                ChessPosition start = new ChessPosition(StringToNumber(test[1]), StringToNumber(test[0]));
+                ChessPosition start = new ChessPosition(stringToNumber(test[1]), stringToNumber(test[0]));
                 Collection<ChessMove> possible = board.getPiece(start).pieceMoves(board, start);
 
                 ArrayList<ChessMove> newist = new ArrayList<>();
