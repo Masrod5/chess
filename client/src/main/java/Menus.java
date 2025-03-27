@@ -276,9 +276,7 @@ public class Menus {
                 ArrayList<ChessMove> newist = new ArrayList<>();
                 newist.add(new ChessMove(start, start, null));
                 newist.addAll(possible);
-//                for (int i = 0; i < possible.size(); i++){
-//                    newist.add(new ChessMove(start, start, null));
-//                }
+
                 possible.add(new ChessMove(start, start, null));
                 Object[] highlight = possible.toArray();
                 drawBoard(board, false, newist);
@@ -294,7 +292,6 @@ public class Menus {
 
     public String leave() throws Exception {
         int gameIndex = currentGameID;
-//        GameData game = gameList.get(gameID-1);
         int dataGameID = gameList.get(gameIndex-1).gameID();
 
 
