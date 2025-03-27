@@ -41,7 +41,6 @@ public class ServerFacadeTests {
         facade.clear();
 
         assertDoesNotThrow(() -> facade.register(newUser));
-//        assertEquals(result.username(), newUser.username());
     }
 
     @Test
@@ -63,7 +62,6 @@ public class ServerFacadeTests {
 
     @Test
     public void loginBadRequest() throws Exception {
-//        registerSuccess();
         try {
             facade.login(new LoginRequest("password", "username"));
             assertTrue(false);
