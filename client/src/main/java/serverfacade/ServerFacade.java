@@ -19,7 +19,6 @@ public class ServerFacade {
     private String authToken;
     private String username;
     private State state = State.LOGOUT;
-    private int currGameID = 0;
 
     public ServerFacade(String url) {
         serverUrl = url;
@@ -30,17 +29,14 @@ public class ServerFacade {
         state = State.LOGIN;
         AuthData test = this.makeRequest("POST", path, user, AuthData.class);
         authToken = test.authToken();
-//        username = test.username();
         return test;
     }
 
     public int createGame(String name) throws Exception {
         var path = "/game";
-//        UserData user = new UserData("ha", "ha", "ha");
         GameName test = new GameName(name);
         GameData newGame = this.makeRequest("POST", path, test, GameData.class);
-//        newGame.game().getBoard().resetBoard();
-//        currGameID++;
+
         return newGame.gameID();
     }
 
