@@ -114,8 +114,17 @@ public class Menus {
             return "you must log in to join a game";
         }
         if (params.size() == 2){
-            int gameID = Integer.parseInt(params.get(0));
-            String color = params.get(1).toUpperCase();
+            int gameID;
+            String color;
+            try {
+                gameID = Integer.parseInt(params.get(0));
+            }catch(NumberFormatException numberFormatException){
+                return "game id must be a number";
+            }
+
+            color = params.get(1).toUpperCase();
+
+
             if (!(color.equals("BLACK") || color.equals("WHITE"))){
                 return "team to join as must be typed \"(b)lack\" or \"(w)hite\"";
             }
@@ -195,7 +204,7 @@ public class Menus {
             try {
                 server.login(new LoginRequest(username, password));
             } catch (Exception e) {
-                return "incorrect username of password";
+                return "incorrect username or password";
             }
             state = State.LOGIN;
 
