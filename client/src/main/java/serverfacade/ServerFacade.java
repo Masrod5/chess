@@ -17,7 +17,6 @@ public class ServerFacade {
 
     private final String serverUrl;
     private String authToken;
-    private String username;
     private State state = State.LOGOUT;
 
     public ServerFacade(String url) {
