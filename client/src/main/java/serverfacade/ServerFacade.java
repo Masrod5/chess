@@ -68,7 +68,7 @@ public class ServerFacade {
     public void leaveGame(int gameID, String color) throws Exception {
         var path = "/game";
         JoinGameRequest joining = new JoinGameRequest(gameID, color);
-        this.makeRequest("PUT", path, joining, null);
+        this.makeRequest("DELETE", path, joining, null);
     }
 
     public void logout() throws Exception {

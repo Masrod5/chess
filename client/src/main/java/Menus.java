@@ -102,7 +102,7 @@ public class Menus {
             }
             drawBoard(new ChessGame().getBoard(), false, null);
 
-
+//            this.state = State.JOINED;
             return "observing game: " + gameID;
         }else{
             return "incorrect number of parameters";
@@ -229,6 +229,9 @@ public class Menus {
         if (state == State.LOGIN){
             return "you must log out before you register a new user";
         }
+        if (state == State.JOINED){
+            return "you are in a game. you must log out to register a new user";
+        }
         if (params.size() == 3) {
 
             String username = params.get(0);
@@ -301,9 +304,13 @@ public class Menus {
     }
 
     public String leave() throws Exception {
+        if (state != State.JOINED){
+            return "you must be in a game to leave it. lol";
+        }
         int gameIndex = currentGameID;
         int dataGameID = gameList.get(gameIndex-1).gameID();
         server.leaveGame(dataGameID, "WHITE");
+        state = State.LOGIN;
         return "left the game";
     }
 
@@ -327,6 +334,13 @@ public class Menus {
                     leave - leave the current game
                     move <Start Posistion><End Position> - make a move
                     resign - you forfeit the game
+                    highlight <Piece Position> - highlight a piece possible moves
+                    """;
+        } else if (state == State.OBSERVING){
+            return """
+                    help - possible commands
+                    Redraw - redraw the chess board
+                    leave - leave the current game
                     highlight <Piece Position> - highlight a piece possible moves
                     """;
         } else {

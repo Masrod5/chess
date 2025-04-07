@@ -3,5 +3,6 @@ package serverfacade;
 public enum State {
     LOGOUT,
     LOGIN,
-    JOINED
+    JOINED,
+    OBSERVING
 }
