@@ -149,8 +149,8 @@ public class Menus {
                 drawBoard(new ChessGame().getBoard(), true, null);
             }
 
-            state = State.LOGIN;
-//            state = State.JOINED; uncomment in phase 6
+//            state = State.LOGIN;
+            state = State.JOINED;
             return "joined game: " + gameID + " as " + color;
         }else{
             return "incorrect number of parameters";
@@ -277,7 +277,7 @@ public class Menus {
             if (params.size() == 1){
                 String move = params.get(0);
                 String[] test = move.split("");
-                ChessBoard board = new ChessBoard();
+                ChessBoard board = new ChessBoard(); // needs to take in the current board
                 board.resetBoard();
 
                 ChessPosition start = new ChessPosition(stringToNumber(test[1]), stringToNumber(test[0]));
@@ -297,7 +297,7 @@ public class Menus {
         }else{
             return "you must have joined or be observing a game to run this command";
         }
-        return "didn't work";
+        return "";
     }
 
     public String leave() throws Exception {

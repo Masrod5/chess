@@ -51,10 +51,23 @@ public class PrintBoard {
                 boolean green = false;
                 boolean yellow = false;
 
+                if (highlight != null) {
+                    for (ChessMove thing : highlight) {
+
+                        if (abs(thing.getEndPosition().getRow()-1+add) == j && abs(thing.getEndPosition().getColumn()-1+add) == i) {
+                            int ha = thing.getEndPosition().getRow();
+                            green = true;
+                            if (abs(thing.getStartPosition().getRow()-1+add) == j && abs(thing.getStartPosition().getColumn()-1+add) == i) {
+                                yellow = true;
+                            }
+                            break;
+                        }
+                    }
+                }
 
                 if ((j+i)%2 == 0){
                     if (yellow == true) {
-                        out.print(SET_BG_COLOR_WHITE);
+                        out.print(SET_BG_COLOR_YELLOW);
                     } else if (green == true){
                         out.print(SET_BG_COLOR_GREEN);
                     }else {
@@ -62,7 +75,7 @@ public class PrintBoard {
                     }
                 }else{
                     if (yellow == true) {
-                        out.print(SET_BG_COLOR_WHITE);
+                        out.print(SET_BG_COLOR_YELLOW);
                     } else if (green == true){
                         out.print(SET_BG_COLOR_DARK_GREEN);
                     }else {
