@@ -113,6 +113,9 @@ public class Menus {
         if (state == State.LOGOUT){
             return "you must log in to join a game";
         }
+        if (state == State.JOINED) {
+            return "you need to leave the game you are in to join a new game";
+        }
         if (params.size() == 2){
             int gameID;
             String color;
@@ -126,7 +129,7 @@ public class Menus {
 
 
             if (!(color.equals("BLACK") || color.equals("WHITE"))){
-                return "team to join as must be typed \"(b)lack\" or \"(w)hite\"";
+                return "team to join as must be typed \"black\" or \"white\"";
             }
             if (gameList == null){
                 return "you must run \"list\" before you can join a game";
@@ -284,6 +287,10 @@ public class Menus {
                 board.resetBoard();
 
                 ChessPosition start = new ChessPosition(stringToNumber(test[1]), stringToNumber(test[0]));
+
+                if (board.getPiece(start) == null){
+                    return "there is no piece there";
+                }
                 Collection<ChessMove> possible = board.getPiece(start).pieceMoves(board, start);
 
                 ArrayList<ChessMove> newist = new ArrayList<>();
