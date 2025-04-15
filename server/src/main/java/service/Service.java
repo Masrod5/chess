@@ -30,6 +30,10 @@ public class Service {
         authDAO.deleteAuth(authDAO.getAuth(header));
     }
 
+    public AuthData getAuth(String authToken) throws DataAccessException {
+        return authDAO.getAuth(authToken);
+    }
+
     public AuthData register(UserData user) throws DataAccessException {
 
         UserData info;
