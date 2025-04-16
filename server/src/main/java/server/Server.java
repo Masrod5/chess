@@ -18,11 +18,9 @@ public class Server {
     AuthDAO authDAO;
     GameDAO gameDAO;
 
-    private final WebSocketHandler webSocketHandler;
+    private final WebSocketHandler webSocketHandler = new WebSocketHandler();
 
-    public Server(Service service){
-        webSocketHandler = new WebSocketHandler();
-    }
+
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
