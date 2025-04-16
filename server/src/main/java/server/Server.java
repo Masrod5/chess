@@ -18,6 +18,12 @@ public class Server {
     AuthDAO authDAO;
     GameDAO gameDAO;
 
+    private final WebSocketHandler webSocketHandler;
+
+    public Server(Service service){
+        webSocketHandler = new WebSocketHandler();
+    }
+
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
@@ -35,7 +41,7 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
 
-//        Spark.webSocket("/ws", WebSocketHandler.class); //
+        Spark.webSocket("/ws", webSocketHandler); //
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
         Spark.delete("/session", this::logout);
