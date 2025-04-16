@@ -18,14 +18,13 @@ public class Server {
     AuthDAO authDAO;
     GameDAO gameDAO;
 
-    private final WebSocketHandler webSocketHandler = new WebSocketHandler();
+
+    private WebSocketHandler webSocketHandler = null;
 
 
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
-
-        Spark.staticFiles.location("web");
 
         try {
             userDAO = new MySQLUserDAO();
@@ -36,10 +35,20 @@ public class Server {
             throw new RuntimeException(e);
         }
 
+        webSocketHandler = new WebSocketHandler(new Service(userDAO, authDAO, gameDAO));
+
+        Spark.webSocket("/ws", webSocketHandler); //
+
+        Spark.staticFiles.location("web");
+
+
+
+
+
+
 
         // Register your endpoints and handle exceptions here.
 
-        Spark.webSocket("/ws", webSocketHandler); //
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
         Spark.delete("/session", this::logout);

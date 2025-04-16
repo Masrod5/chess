@@ -8,6 +8,7 @@ import dataaccess.GameDAO;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import service.Service;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
@@ -18,8 +19,13 @@ import websocket.messages.ServerMessage;
 import javax.management.Notification;
 import java.io.IOException;
 
+@WebSocket
 public class WebSocketHandler {
     public Service service;
+
+    public WebSocketHandler(Service service){
+        this.service = service;
+    }
 
     private final ConnectionManager sessions = new ConnectionManager();
 
@@ -36,8 +42,8 @@ public class WebSocketHandler {
                 MakeMoveCommand move = new Gson().fromJson(message, MakeMoveCommand.class);
                 makeMove(move.getAuthToken(), move.getGameID(), move.getMove());
             }
-            case LEAVE -> leave(command.getAuthToken(), command.getGameID());
-            case RESIGN -> resign(command.getAuthToken(), command.getGameID());
+            case LEAVE -> leave(command.getAuthToken(), command.getGameID(), session);
+            case RESIGN -> resign(command.getAuthToken(), command.getGameID(), session);
         }
 
 
@@ -46,11 +52,15 @@ public class WebSocketHandler {
     private void connect(String authToken, Integer gameID, Session session) throws IOException, DataAccessException {
         String username = service.getAuth(authToken).username();
 
+
         sessions.add(gameID, username, session);
 
         LoadGameMessage message = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, service.getGame(gameID));
 
-        session.getRemote().sendString("WebSocket load game response: " + message);
+        Gson gson = new Gson();
+        var json = gson.toJson(message);
+
+        session.getRemote().sendString(json);
 
         NotificationMessage notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION);
         sessions.messageToAllButCurrent(session, notification.toString(), gameID);
@@ -61,10 +71,20 @@ public class WebSocketHandler {
     private void makeMove(String authToken, Integer gameID, ChessMove move) throws IOException {
     }
 
-    private void leave(String authToken, Integer gameID) throws IOException {
+    private void leave(String authToken, Integer gameID, Session session) throws IOException {
+
+
+        NotificationMessage notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+
+        sessions.messageToAllButCurrent(session, notification.toString(), gameID);
+
+
+
     }
 
-    private void resign(String authToken, Integer gameID) throws IOException {
+    private void resign(String authToken, Integer gameID, Session session) throws IOException {
+        NotificationMessage notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+        sessions.messageToAll(session, notification.toString(), gameID);
     }
 
 

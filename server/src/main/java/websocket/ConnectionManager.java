@@ -14,7 +14,7 @@ public class ConnectionManager {
     public void add(Integer gameID, String username, Session session) {
 
         if (connections.get(gameID) == null){
-            connections.putIfAbsent(gameID, null);
+            connections.putIfAbsent(gameID, ConcurrentHashMap.newKeySet());
         }
         connections.get(gameID).add(session);
     }
