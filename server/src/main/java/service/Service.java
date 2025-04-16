@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
+import chess.ChessGame;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
@@ -28,6 +29,10 @@ public class Service {
             throw new DataAccessException("unauthorized");
         }
         authDAO.deleteAuth(authDAO.getAuth(header));
+    }
+
+    public GameData getGame(int gameID) throws DataAccessException {
+        return gameDAO.getGame(gameID);
     }
 
     public AuthData getAuth(String authToken) throws DataAccessException {

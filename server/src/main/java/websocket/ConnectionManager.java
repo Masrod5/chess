@@ -5,35 +5,44 @@ import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
-    public final ConcurrentHashMap<Integer, ConcurrentHashMap<String, Connection>> connections = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<Integer, Set<Session>> connections = new ConcurrentHashMap<>();
 
     public void add(Integer gameID, String username, Session session) {
 
-        connections.get(gameID).put(username, new Connection(username, session));
+        if (connections.get(gameID) == null){
+            connections.putIfAbsent(gameID, null);
+        }
+        connections.get(gameID).add(session);
     }
 
-    public void remove(Integer gameID, String username) {
-        connections.get(gameID).remove(username);
+    public void remove(Integer gameID, String username, Session session) throws IOException {
+        connections.get(gameID).remove(session);
     }
 
-    public void broadcast(Integer gameID, String excludeVisitorName, ServerMessage notification) throws IOException {
-        var removeList = new ArrayList<Connection>();
-        for (var c : connections.get(gameID).values()) {
-            if (c.session.isOpen()) {
-                if (!c.username.equals(excludeVisitorName)) {
-                    c.send(notification.toString());
-                }
-            } else {
-                removeList.add(c);
+    public void messageToRoot(Session session, String message) throws IOException {
+        session.getRemote().sendString("WebSocket response: " + message);
+    }
+
+    public void messageToAll(Session session, String message, Integer gameID) throws IOException {
+        var sessions = connections.get(gameID);
+        for (var s : sessions){
+            s.getRemote().sendString("WebSocket response: " + message);
+        }
+    }
+
+    public void messageToAllButCurrent(Session session, String message, Integer gameID) throws IOException {
+        var sessions = connections.get(gameID);
+        for (var s : sessions){
+            if(!s.equals(session)) {
+                s.getRemote().sendString("WebSocket response: " + message);
             }
         }
+    }
 
-        // Clean up any connections that were left open.
-        for (var c : removeList) {
-            connections.remove(c.username);
-        }
-    }
-    }
+
+
+}

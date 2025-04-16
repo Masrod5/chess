@@ -5,6 +5,7 @@ import dataaccess.*;
 import model.*;
 import spark.*;
 import service.Service;
+import websocket.WebSocketHandler;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
 
-//        Spark.webSocket("/ws", ); //
+        Spark.webSocket("/ws", WebSocketHandler.class); //
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
         Spark.delete("/session", this::logout);
